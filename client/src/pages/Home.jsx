@@ -1,7 +1,8 @@
 
-
 export default function Home() {
   return (
-    <div>Home</div>
+    <div className="container mx-auto py-5">
+      List of posts.
+    </div>
   )
 }
