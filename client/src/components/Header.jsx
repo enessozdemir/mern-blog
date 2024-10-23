@@ -36,7 +36,6 @@ export default function Header() {
             <AiOutlineSearch size={20} />
           </Button>
 
-
           <Button className="w-12 h-10 p-1" color="gray" pill>
             <FaMoon />
           </Button>
