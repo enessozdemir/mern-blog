@@ -15,22 +15,32 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formdata.email || !formdata.password) {
+      return setError("Please fill in all fields!");
+    }
+
     try {
-        const response = await fetch("/api/auth/signin", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formdata),
-        })
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formdata),
+      });
 
-        const data = await response.json();
-        if (data.success === false) {
-            return setError(data.message);
-        }
+      const data = await response.json();
+      if (data.success === false) {
+        return setError(data.message);
+      }
+      setLoading(false);
 
+      if (response.ok) {
+        navigate("/");
+      }
     } catch (error) {
       setError(error.message);
+      setLoading(false);
     }
   };
 
