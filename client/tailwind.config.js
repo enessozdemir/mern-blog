@@ -11,6 +11,7 @@ export default {
     extend: {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
+        airone: ['Airone', 'sans-serif'],
       },
     },
   },

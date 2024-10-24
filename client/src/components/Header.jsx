@@ -10,9 +10,9 @@ export default function Header() {
     <Navbar className="border-b-2">
       <Link
         to="/"
-        className="self-center whitespace-nowrap text-2xl sm:text-3xl font-semibold font-poppins"
+        className="self-center whitespace-nowrap text-2xl sm:text-3xl font-airone"
       >
-        Blog
+        Blog.
       </Link>
 
       <div className="flex gap-10 md:order-2">
