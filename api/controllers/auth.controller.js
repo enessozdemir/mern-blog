@@ -7,7 +7,7 @@ export const signUp = async (req, res, next) => {
     const { username, email, password } = req.body;
 
     if (!username || !email || !password || username == '' || email == '' || password == '') {
-        next(errorHandler(400, 'All fields are required'));
+        return next(errorHandler(400, 'All fields are required'));
     }
 
     const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -48,7 +48,6 @@ export const signIn = async (req, res, next) => {
         res.status(200).cookie('access_token', token, {
             httpOnly: true,
         }).json(rest);
-
 
         return res.status(200).json({ message: 'User signed in successfully', data: user });
     } catch (err) {

@@ -2,11 +2,17 @@
 import { Alert, Button, Label, TextInput } from "flowbite-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 
 export default function SignIn() {
   const [formdata, setFormdata] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { loading, error } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -17,10 +23,11 @@ export default function SignIn() {
     e.preventDefault();
 
     if (!formdata.email || !formdata.password) {
-      return setError("Please fill in all fields!");
+      return dispatch(signInFailure("Please fill in all fields!"));
     }
 
     try {
+      dispatch(signInStart());
       const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
@@ -31,16 +38,15 @@ export default function SignIn() {
 
       const data = await response.json();
       if (data.success === false) {
-        return setError(data.message);
+        dispatch(signInFailure(data.message));
       }
-      setLoading(false);
 
       if (response.ok) {
+        dispatch(signInSuccess(data));
         navigate("/");
       }
     } catch (error) {
-      setError(error.message);
-      setLoading(false);
+      dispatch(signInFailure(error.message));
     }
   };
 
