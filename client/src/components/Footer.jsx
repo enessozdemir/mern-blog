@@ -14,15 +14,19 @@ import {
   PiInstagramLogo,
   PiDiscordLogo,
 } from "react-icons/pi";
+import { useSelector } from "react-redux";
 
 export default function FooterCom() {
+  const { theme } = useSelector((state) => state.theme);
   return (
     <div className="p-7 sm:px-0">
       <div className="container mx-auto flex flex-col sm:flex-row">
         <div className="hidden sm:flex flex-col gap-y-3 flex-1">
           <Link
             to="/home"
-            className="text-primary-color whitespace-nowrap text-2xl sm:text-3xl font-airone"
+            className={`${
+              theme === "light" ? "text-primary-color" : "text-white"
+            } whitespace-nowrap text-2xl sm:text-3xl font-airone`}
           >
             Blog.
           </Link>
@@ -35,7 +39,7 @@ export default function FooterCom() {
               className="text-primary-color normal-case text-sm sm:text-lg font-medium mb-3"
               title="Categories"
             />
-            <FooterLinkGroup col className="text-sm text-light-gray leading-4">
+            <FooterLinkGroup col className="text-sm !text-light-gray">
               <FooterLink href="#" target="_blank" rel="noopener noreferrer">
                 Technology
               </FooterLink>
@@ -53,7 +57,7 @@ export default function FooterCom() {
               className="text-primary-color normal-case text-sm sm:text-lg font-medium mb-3"
               title="Support"
             />
-            <FooterLinkGroup col className="text-sm text-light-gray">
+            <FooterLinkGroup col className="text-sm !text-light-gray">
               <FooterLink href="#" target="_blank" rel="noopener noreferrer">
                 FAQs
               </FooterLink>
@@ -71,7 +75,7 @@ export default function FooterCom() {
               className="text-primary-color normal-case text-sm sm:text-lg font-medium mb-3"
               title="About"
             />
-            <FooterLinkGroup col className="text-sm text-light-gray">
+            <FooterLinkGroup col className="text-sm !text-light-gray">
               <FooterLink href="#" target="_blank" rel="noopener noreferrer">
                 Our Team
               </FooterLink>
@@ -91,9 +95,13 @@ export default function FooterCom() {
 
       <FooterDivider className="container mx-auto" />
 
-      <div className="flex justify-between container mx-auto text-icon-color">
+      <div
+        className={`flex justify-between container mx-auto ${
+          theme === "light" ? "text-icon-color" : "text-lighter-icon-color"
+        }`}
+      >
         <FooterCopyright
-          className="text-icon-color"
+          className="!text-light-gray"
           by="Blog."
           year={new Date().getFullYear()}
         />
@@ -101,31 +109,51 @@ export default function FooterCom() {
         <div className="flex gap-x-5">
           <a
             href="#"
-            className="hover:text-primary-color transition-all duration-200 text-2xl"
+            className={`${
+              theme === "light"
+                ? "hover:text-primary-color"
+                : "hover:text-white"
+            } transition-all duration-200 text-2xl`}
           >
             <PiInstagramLogo />
           </a>
           <a
             href="#"
-            className="hover:text-primary-color transition-all duration-200 text-2xl"
+            className={`${
+              theme === "light"
+                ? "hover:text-primary-color"
+                : "hover:text-white"
+            } transition-all duration-200 text-2xl`}
           >
             <PiXLogo />
           </a>
           <a
             href="#"
-            className="hover:text-primary-color transition-all duration-200 text-2xl"
+            className={`${
+              theme === "light"
+                ? "hover:text-primary-color"
+                : "hover:text-white"
+            } transition-all duration-200 text-2xl`}
           >
             <PiGithubLogo />
           </a>
           <a
             href="#"
-            className="hover:text-primary-color transition-all duration-200 text-2xl"
+            className={`${
+              theme === "light"
+                ? "hover:text-primary-color"
+                : "hover:text-white"
+            } transition-all duration-200 text-2xl`}
           >
             <PiLinkedinLogo />
           </a>
           <a
             href="#"
-            className="hover:text-primary-color transition-all duration-200 text-2xl"
+            className={`${
+              theme === "light"
+                ? "hover:text-primary-color"
+                : "hover:text-white"
+            } transition-all duration-200 text-2xl`}
           >
             <PiDiscordLogo />
           </a>

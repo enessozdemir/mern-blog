@@ -13,7 +13,7 @@ function App() {
 
   return (
     <>
-      <Header />
+      {!hideHeaderAndFooter && <Header />}
       <Routes>
         <Route path="/" element={<SignIn />} />
         <Route path="/home" element={<Home />} />

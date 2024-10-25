@@ -19,10 +19,11 @@ export default {
     colors: theme => ({
       "primary-color": '#1F2937',
       "light-gray": '#818181',
-      "icon-color": '#b3b3b3'
+      "icon-color": '#b3b3b3',
+      "lighter-icon-color": "#5e5e5e"
 
 
-  })
+    })
   },
   plugins: [
     flowbite.plugin(),
