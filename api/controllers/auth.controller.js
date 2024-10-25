@@ -17,7 +17,7 @@ export const signUp = async (req, res, next) => {
         user.save();
         return res.status(201).json({ message: 'User created successfully', data: user }); ƒ
     } catch (err) {
-        next(err);
+        return next(err);
     }
 };
 
@@ -25,7 +25,7 @@ export const signIn = async (req, res, next) => {
     const { email, password } = req.body;
 
     if (!email || !password || email == '' || password == '') {
-        next(errorHandler(400, 'All fields are required'));
+        return next(errorHandler(400, 'All fields are required'));
     }
 
     try {
@@ -50,7 +50,7 @@ export const signIn = async (req, res, next) => {
 
         return res.status(200).json({ message: 'User signed in successfully', data: user });
     } catch (err) {
-        next(err);
+        return next(err);
     }
 };
 
@@ -76,7 +76,7 @@ export const signInWithGoogle = async (req, res, next) => {
             });
             await newUser.save();
         }
-        
+
         const { password, ...rest } = newUser._doc;
         const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
         return res.status(200).cookie('access_token', token, {
@@ -84,7 +84,7 @@ export const signInWithGoogle = async (req, res, next) => {
         }).json(rest);
 
     } catch (error) {
-        next(error);
+        return next(error);
     }
 
 };
