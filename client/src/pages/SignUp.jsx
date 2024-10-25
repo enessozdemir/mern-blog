@@ -73,7 +73,7 @@ export default function SignUp() {
   };
 
   return (
-    <div className="rounded-lg mt-5 sm:mt-16 flex flex-col sm:flex-row container mx-auto gap-x-16">
+    <div className="mt-5 sm:mt-16 flex flex-col sm:flex-row container mx-auto gap-x-16">
       {/* left side */}
       <form className="flex-1 flex flex-col gap-y-5 p-7" onSubmit={handeSubmit}>
         <div>

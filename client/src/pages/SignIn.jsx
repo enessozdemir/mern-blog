@@ -51,7 +51,7 @@ export default function SignIn() {
   };
 
   return (
-    <div className="rounded-lg mt-10 sm:mt-20 flex flex-col sm:flex-row container mx-auto gap-x-16">
+    <div className="mt-10 sm:mt-20 flex flex-col sm:flex-row container mx-auto gap-x-16 gap-y-7">
       {/* left side */}
       <form
         className="flex-1 flex flex-col gap-y-4 p-7"
