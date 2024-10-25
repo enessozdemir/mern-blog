@@ -10,7 +10,7 @@ export default function Header() {
     <Navbar className="border-b-2">
       <Link
         to="/"
-        className="self-center whitespace-nowrap text-2xl sm:text-3xl font-airone"
+        className="text-primary-color self-center whitespace-nowrap text-2xl sm:text-3xl font-airone"
       >
         Blog.
       </Link>
@@ -40,9 +40,9 @@ export default function Header() {
             <FaMoon />
           </Button>
           <Link to="/sign-in">
-            <Button gradientDuoTone="greenToBlue" outline>
+            <button className="text-black rounded-lg text-sm font-medium py-2 px-4 border-2 border-primary-color hover:bg-primary-color hover:text-white">
               Sign In
-            </Button>
+            </button>
           </Link>
         </div>
       </div>

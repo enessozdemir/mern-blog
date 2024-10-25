@@ -124,7 +124,7 @@ export default function SignUp() {
           <Button
             type="submit"
             className="w-full"
-            gradientDuoTone="greenToBlue"
+            color="dark"
             disabled={loading}
           >
             {loading ? (
@@ -137,9 +137,9 @@ export default function SignUp() {
             )}
           </Button>
           <ToastContainer />
-          <p className="text-gray-600 mt-2 text-sm">
+          <p className="text-gray-400 mt-2 text-sm">
             Already have an account?{" "}
-            <a href="/sign-in" className="text-blue-500 ml-1 hover:underline">
+            <a href="/sign-in" className="text-primary-color ml-1 underline hover:no-underline">
               Sign In
             </a>
           </p>
@@ -153,7 +153,7 @@ export default function SignUp() {
 
       {/* right side */}
       <div className="flex-1 flex flex-col justify-center px-7 sm:px-0">
-        <h1 className="text-[4rem] sm:text-[6rem] font-airone font-light">
+        <h1 className="text-primary-color text-[4rem] sm:text-[6rem] font-airone font-light">
           Blog.
         </h1>
         <p className="text-gray-400 text-sm">

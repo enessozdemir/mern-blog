@@ -81,13 +81,13 @@ export default function SignIn() {
           <Button
             type="submit"
             className="w-full"
-            gradientDuoTone="greenToBlue"
+            color="dark"
           >
             Sign In
           </Button>
-          <p className="text-gray-600 mt-2 text-sm">
+          <p className="text-gray-400 mt-2 text-sm">
             New here? Create your account now!{" "}
-            <a href="/sign-up" className="text-blue-500 ml-1 hover:underline">
+            <a href="/sign-up" className="text-primary-color ml-1 underline hover:no-underline">
               Sign Up
             </a>
           </p>
@@ -101,7 +101,7 @@ export default function SignIn() {
 
       {/* right side */}
       <div className="flex-1 flex flex-col justify-center px-7 sm:px-0">
-        <h1 className="text-[4rem] sm:text-[6rem] font-airone font-light">
+        <h1 className="text-primary-color text-[4rem] sm:text-[6rem] font-airone font-light">
           Blog.
         </h1>
         <p className="text-gray-400 text-sm">
