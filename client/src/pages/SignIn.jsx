@@ -8,6 +8,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 export default function SignIn() {
   const [formdata, setFormdata] = useState({});
@@ -60,7 +61,7 @@ export default function SignIn() {
         <div>
           <Label>Email</Label>
           <TextInput
-            placeholder="Email"
+            placeholder="xyz@example.com"
             id="email"
             type="email"
             onChange={handleChange}
@@ -70,7 +71,7 @@ export default function SignIn() {
         <div>
           <Label>Password</Label>
           <TextInput
-            placeholder="Password"
+            placeholder="********"
             id="password"
             type="password"
             onChange={handleChange}
@@ -78,16 +79,16 @@ export default function SignIn() {
         </div>
 
         <div className="mt-7">
-          <Button
-            type="submit"
-            className="w-full"
-            color="dark"
-          >
+          <Button type="submit" className="w-full" color="dark">
             Sign In
           </Button>
+          <OAuth />
           <p className="text-gray-400 mt-2 text-sm">
             New here? Create your account now!{" "}
-            <a href="/sign-up" className="text-primary-color ml-1 underline hover:no-underline">
+            <a
+              href="/sign-up"
+              className="text-primary-color ml-1 underline hover:no-underline"
+            >
               Sign Up
             </a>
           </p>

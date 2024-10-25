@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <Navbar className="border-b-2">
       <Link
-        to="/"
+        to="/home"
         className="text-primary-color self-center whitespace-nowrap text-2xl sm:text-3xl font-airone"
       >
         Blog.

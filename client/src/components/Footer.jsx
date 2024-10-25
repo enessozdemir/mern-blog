@@ -12,6 +12,7 @@ import {
   PiLinkedinLogo,
   PiGithubLogo,
   PiInstagramLogo,
+  PiDiscordLogo,
 } from "react-icons/pi";
 
 export default function FooterCom() {
@@ -20,7 +21,7 @@ export default function FooterCom() {
       <div className="container mx-auto flex flex-col sm:flex-row">
         <div className="hidden sm:flex flex-col gap-y-3 flex-1">
           <Link
-            to="/"
+            to="/home"
             className="text-primary-color whitespace-nowrap text-2xl sm:text-3xl font-airone"
           >
             Blog.
@@ -90,8 +91,12 @@ export default function FooterCom() {
 
       <FooterDivider className="container mx-auto" />
 
-      <div className="flex justify-between container mx-auto text-icon-color" >
-        <FooterCopyright className="text-icon-color" by="Blog." year={new Date().getFullYear()} />
+      <div className="flex justify-between container mx-auto text-icon-color">
+        <FooterCopyright
+          className="text-icon-color"
+          by="Blog."
+          year={new Date().getFullYear()}
+        />
 
         <div className="flex gap-x-5">
           <a
@@ -117,6 +122,12 @@ export default function FooterCom() {
             className="hover:text-primary-color transition-all duration-200 text-2xl"
           >
             <PiLinkedinLogo />
+          </a>
+          <a
+            href="#"
+            className="hover:text-primary-color transition-all duration-200 text-2xl"
+          >
+            <PiDiscordLogo />
           </a>
         </div>
       </div>

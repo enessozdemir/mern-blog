@@ -7,7 +7,7 @@ import FooterCom from "./components/Footer";
 
 function App() {
   const location = useLocation();
-  const hideHeaderAndFooter = ["/sign-in", "/sign-up"].includes(
+  const hideHeaderAndFooter = ["/sign-in", "/sign-up", "/"].includes(
     location.pathname
   );
 
@@ -15,7 +15,8 @@ function App() {
     <>
       <Header />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<SignIn />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
       </Routes>

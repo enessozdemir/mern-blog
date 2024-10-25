@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import OAuth from "../components/OAuth";
 
 export default function SignUp() {
   const [formdata, setFormdata] = useState({});
@@ -79,7 +80,7 @@ export default function SignUp() {
         <div>
           <Label>Username</Label>
           <TextInput
-            placeholder="Username"
+            placeholder="username"
             id="username"
             type="text"
             onChange={handleChange}
@@ -90,7 +91,7 @@ export default function SignUp() {
         <div>
           <Label>Email</Label>
           <TextInput
-            placeholder="Email"
+            placeholder="xyz@example.com"
             id="email"
             type="email"
             onChange={handleChange}
@@ -101,7 +102,7 @@ export default function SignUp() {
         <div>
           <Label>Password</Label>
           <TextInput
-            placeholder="Password"
+            placeholder="********"
             id="password"
             type="password"
             onChange={handleChange}
@@ -112,7 +113,7 @@ export default function SignUp() {
         <div>
           <Label>Password Again</Label>
           <TextInput
-            placeholder="Password Again"
+            placeholder="********"
             id="password_again"
             type="password"
             onChange={handleChange}
@@ -136,10 +137,14 @@ export default function SignUp() {
               "Sign Up"
             )}
           </Button>
+          <OAuth />
           <ToastContainer />
           <p className="text-gray-400 mt-2 text-sm">
             Already have an account?{" "}
-            <a href="/sign-in" className="text-primary-color ml-1 underline hover:no-underline">
+            <a
+              href="/sign-in"
+              className="text-primary-color ml-1 underline hover:no-underline"
+            >
               Sign In
             </a>
           </p>
