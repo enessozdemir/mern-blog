@@ -25,7 +25,7 @@ export default function FooterCom() {
           <Link
             to="/home"
             className={`${
-              theme === "light" ? "text-primary-color" : "text-white"
+              theme === "light" ? "text-primary-color" : "text-soft-white"
             } whitespace-nowrap text-2xl sm:text-3xl font-airone`}
           >
             Blog.
@@ -112,7 +112,7 @@ export default function FooterCom() {
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
-                : "hover:text-white"
+                : "hover:text-soft-white"
             } transition-all duration-200 text-2xl`}
           >
             <PiInstagramLogo />
@@ -122,7 +122,7 @@ export default function FooterCom() {
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
-                : "hover:text-white"
+                : "hover:text-soft-white"
             } transition-all duration-200 text-2xl`}
           >
             <PiXLogo />
@@ -132,7 +132,7 @@ export default function FooterCom() {
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
-                : "hover:text-white"
+                : "hover:text-soft-white"
             } transition-all duration-200 text-2xl`}
           >
             <PiGithubLogo />
@@ -142,7 +142,7 @@ export default function FooterCom() {
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
-                : "hover:text-white"
+                : "hover:text-soft-white"
             } transition-all duration-200 text-2xl`}
           >
             <PiLinkedinLogo />
@@ -152,7 +152,7 @@ export default function FooterCom() {
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
-                : "hover:text-white"
+                : "hover:text-soft-white"
             } transition-all duration-200 text-2xl`}
           >
             <PiDiscordLogo />

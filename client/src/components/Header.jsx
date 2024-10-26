@@ -4,7 +4,6 @@ import {
   Button,
   Dropdown,
   DropdownDivider,
-  DropdownHeader,
   DropdownItem,
   Navbar,
   TextInput,
@@ -22,11 +21,11 @@ export default function Header() {
   const dispatch = useDispatch();
 
   return (
-    <Navbar className="border-b-2">
+    <Navbar className="border-b-2 px-5">
       <Link
         to="/home"
         className={`${
-          theme === "light" ? "text-primary-color" : "text-white"
+          theme === "light" ? "text-primary-color" : "text-soft-white"
         } self-center whitespace-nowrap text-2xl sm:text-3xl font-airone`}
       >
         Blog.
@@ -69,12 +68,6 @@ export default function Header() {
                 <Avatar alt="user" img={currentUser.profilePicture} rounded />
               }
             >
-              <DropdownHeader>
-                <span className="block text-sm">@{currentUser.username}</span>
-                <span className="block text-sm font-medium truncate">
-                  @{currentUser.email}
-                </span>
-              </DropdownHeader>
               <Link to={"/dashboard?tab=profile"}>
                 <DropdownItem>Profile</DropdownItem>
               </Link>
@@ -86,8 +79,8 @@ export default function Header() {
               <button
                 className={`${
                   theme === "light"
-                    ? "text-black rounded-lg text-sm font-medium py-2 px-4 border-2 border-primary-color hover:bg-primary-color hover:text-white"
-                    : "text-white rounded-lg text-sm font-medium py-2 px-4 border-2 border-white hover:bg-white hover:text-primary-color"
+                    ? "text-black rounded-lg text-sm font-medium py-2 px-4 border-2 border-primary-color hover:bg-primary-color hover:text-soft-white"
+                    : "text-soft-white rounded-lg text-sm font-medium py-2 px-4 border-2 border-white hover:bg-white hover:text-primary-color"
                 } `}
               >
                 Sign In

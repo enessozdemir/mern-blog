@@ -152,7 +152,7 @@ export default function SignUp() {
               <a
                 href="/sign-in"
                 className={`${
-                  theme === "light" ? "text-primary-color" : "text-white"
+                  theme === "light" ? "text-primary-color" : "text-soft-white"
                 } ml-1 underline hover:no-underline`}
               >
                 Sign In
@@ -170,7 +170,7 @@ export default function SignUp() {
         <div className="flex-1 flex flex-col justify-center px-7 sm:px-0">
           <h1
             className={`${
-              theme === "light" ? "text-primary-color" : "text-white"
+              theme === "light" ? "text-primary-color" : "text-soft-white"
             } text-[3rem] sm:text-[6rem] font-airone font-light`}
           >
             Blog.
