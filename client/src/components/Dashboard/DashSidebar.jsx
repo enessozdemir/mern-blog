@@ -14,7 +14,6 @@ export default function DashSidebar() {
   const location = useLocation();
   const { theme } = useSelector((state) => state.theme);
   const [tab, setTab] = useState(0);
-  console.log(location.pathname);
   useEffect(() => {
     const currentTab = new URLSearchParams(location.search);
     const tabFromUrl = currentTab.get("tab");
@@ -32,6 +31,7 @@ export default function DashSidebar() {
               icon={FiUser}
               label={"User"}
               labelColor={"dark"}
+              as="div"
             >
               Profile
             </SidebarItem>

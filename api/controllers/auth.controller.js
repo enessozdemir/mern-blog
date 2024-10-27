@@ -15,7 +15,7 @@ export const signUp = async (req, res, next) => {
     try {
         const user = await User.create({ username, email, password: hashedPassword });
         user.save();
-        return res.status(201).json({ message: 'User created successfully', data: user }); ƒ
+        return res.status(201).json({ message: 'User created successfully', data: user }); 
     } catch (err) {
         return next(err);
     }
@@ -87,4 +87,21 @@ export const signInWithGoogle = async (req, res, next) => {
         return next(error);
     }
 
+};
+
+export const removeUserImage = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        user.profilePicture = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
+        await user.save();
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
 };

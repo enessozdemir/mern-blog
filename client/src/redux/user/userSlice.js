@@ -23,9 +23,14 @@ const userSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+        updateProfilePicture: (state, action) => {
+            if (state.currentUser) {
+                state.currentUser.profilePicture = action.payload;
+            }
+        },
     },
 });
 
 
-export const { signInStart, signInSuccess, signInFailure } = userSlice.actions;
+export const { signInStart, signInSuccess, signInFailure, updateProfilePicture } = userSlice.actions;
 export default userSlice.reducer;
