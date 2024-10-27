@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { PiXThin, PiEqualsThin } from "react-icons/pi";
 import { Alert, Button, TextInput } from "flowbite-react";
 import { useState, useRef, useEffect } from "react";
@@ -8,13 +8,23 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DashSidebar from "./DashSidebar";
+import {
+  updateStart,
+  updateSuccess,
+  updateFailure,
+} from "../../redux/user/userSlice";
 
 export default function DashProfile() {
   const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
   const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
+  const [updateUserError, setUpdateUserError] = useState(null);
+  const [formData, setFormData] = useState({});
   const filePickerRef = useRef();
   const [dropdown, setDropdown] = useState(false);
   const handleImageChange = (e) => {
@@ -31,17 +41,7 @@ export default function DashProfile() {
   }, [imageFile]);
 
   const uploadImage = async () => {
-    // service firebase.storage {
-    //   match /b/{bucket}/o {
-    //     match /{allPaths=**} {
-    //       allow read;
-    //       allow write: if
-    //       request.resource.size < 2 * 1024 * 1024 &&
-    //       request.resource.contentType.matches('image/.*')
-    //     }
-    //   }
-    // }
-
+    setImageFileUploading(true);
     setImageFileUploadError(null);
     const fileName = new Date().getTime() + imageFile.name;
     const storageRef = ref(storage, fileName);
@@ -61,43 +61,66 @@ export default function DashProfile() {
         setImageFileUploadProgress(null);
         setImageFile(null);
         setImageFileUrl(null);
+        setImageFileUploading(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           setImageFileUrl(downloadURL);
+          setFormData({ ...formData, profilePicture: downloadURL });
+          setImageFileUploading(false);
         });
       }
     );
   };
 
-  // const handleRemoveImage = async () => {
-  //   try {
-  //     const response = await fetch("/api/auth/remove-image", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email: currentUser.email }),
-  //     });
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
 
-  //     if (!response.ok) {
-  //       const errorText = await response.text();
-  //       console.error("Error removing profile picture:", errorText);
-  //       return;
-  //     }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUpdateUserSuccess(null);
+    setUpdateUserError(null);
+    if (Object.keys(formData).length === 0) {
+      setUpdateUserError("No changes made!");
+      return;
+    }
+    if (imageFileUploading) {
+      setUpdateUserError("Please wait for the image to upload!");
+      return;
+    }
 
-  //     const data = await response.json();
-  //     console.log(data);
+    try {
+      dispatch(updateStart());
+      const response = await fetch(`/api/user/update/${currentUser._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
 
-  //     if (data.message) {
-  //       // setCurrentUserProfileImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-  //       setImageFileUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-  //       dispatch(updateProfilePicture(imageFileUrl));
-  //     }
-  //   } catch (error) {
-  //     console.error("Fetch error:", error);
-  //   }
-  // };
+      const data = await response.json();
+      if (!response.ok) {
+        dispatch(updateFailure(data.message));
+        setUpdateUserError(data.message);
+      } else {
+        dispatch(updateSuccess(data));
+        setUpdateUserSuccess("Profile updated successfully!");
+      }
+    } catch (error) {
+      dispatch(updateFailure(error.message));
+    }
+  };
+
+  const handleRemoveImage = async (e) => {
+    e.preventDefault();
+    const defaultImageUrl = import.meta.env.VITE_DEFAULT_IMAGE_URL;
+    setUpdateUserSuccess(null);
+    setUpdateUserError(null);
+    setImageFileUrl(defaultImageUrl);
+    setFormData({ ...formData, profilePicture: defaultImageUrl });
+  };
 
   return (
     <div className="flex justify-between w-full max-w-5xl px-5 py-5 sm:px-16">
@@ -158,7 +181,10 @@ export default function DashProfile() {
                 >
                   Update
                 </span>
-                <span className="text-red-500 text-sm cursor-pointer">
+                <span
+                  className="text-red-500 text-sm cursor-pointer"
+                  onClick={handleRemoveImage}
+                >
                   Remove
                 </span>
               </div>
@@ -172,27 +198,62 @@ export default function DashProfile() {
         {/* username */}
         <div className="flex flex-col mt-8 w-full sm:w-2/3 gap-y-1">
           <p className="text-light-gray">Username</p>
-          <TextInput value={currentUser.username} readOnly />
+          <TextInput
+            id="username"
+            defaultValue={currentUser.username}
+            onChange={handleChange}
+          />
         </div>
         {/* email */}
         <div className="flex flex-col mt-8 w-full sm:w-2/3 gap-y-1">
           <p className="text-light-gray">Email</p>
-          <TextInput value={currentUser.email} readOnly />
+          <TextInput
+            defaultValue={currentUser.email}
+            onChange={handleChange}
+            id="email"
+          />
         </div>
         {/* password */}
         <div className="flex flex-col mt-8 w-full sm:w-2/3 gap-y-1">
           <p className="text-light-gray">Password</p>
-          <TextInput value={"********"} readOnly />
+          <TextInput
+            type="password"
+            id="password"
+            placeholder={"********"}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="flex justify-end sm:justify-start gap-x-5 mt-10 w-full sm:w-2/3">
-          <Button color="light" className="w-1/2">
+          <Button
+            color="light"
+            className="w-1/2"
+            onClick={handleSubmit}
+            disabled={
+              !formData.username &&
+              !formData.email &&
+              !formData.password &&
+              !imageFileUrl
+            }
+          >
             Update
           </Button>
           <Button color="failure" className="w-1/2">
             Delete Account
           </Button>
         </div>
+
+        {updateUserSuccess && (
+          <Alert color="success" className="w-full sm:w-2/3 mt-5">
+            {updateUserSuccess}
+          </Alert>
+        )}
+
+        {updateUserError && (
+          <Alert color="failure" className="w-full sm:w-2/3 mt-5">
+            {updateUserError}
+          </Alert>
+        )}
       </div>
 
       <div className="block sm:hidden">
