@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { PiXThin, PiEqualsThin } from "react-icons/pi";
 import { Alert, Button, TextInput } from "flowbite-react";
 import { useState, useRef, useEffect } from "react";
@@ -8,11 +8,9 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import DashSidebar from "./DashSidebar";
-import { updateProfilePicture } from "../../redux/user/userSlice";
 
 export default function DashProfile() {
   const { currentUser } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -72,34 +70,34 @@ export default function DashProfile() {
     );
   };
 
-  const handleRemoveImage = async () => {
-    try {
-      const response = await fetch("/api/auth/remove-image", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: currentUser.email }),
-      });
+  // const handleRemoveImage = async () => {
+  //   try {
+  //     const response = await fetch("/api/auth/remove-image", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email: currentUser.email }),
+  //     });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Error removing profile picture:", errorText);
-        return;
-      }
+  //     if (!response.ok) {
+  //       const errorText = await response.text();
+  //       console.error("Error removing profile picture:", errorText);
+  //       return;
+  //     }
 
-      const data = await response.json();
-      console.log(data);
+  //     const data = await response.json();
+  //     console.log(data);
 
-      if (data.message) {
-        // setCurrentUserProfileImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-        setImageFileUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
-        dispatch(updateProfilePicture(imageFileUrl));
-      }
-    } catch (error) {
-      console.error("Fetch error:", error);
-    }
-  };
+  //     if (data.message) {
+  //       // setCurrentUserProfileImage("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  //       setImageFileUrl("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
+  //       dispatch(updateProfilePicture(imageFileUrl));
+  //     }
+  //   } catch (error) {
+  //     console.error("Fetch error:", error);
+  //   }
+  // };
 
   return (
     <div className="flex justify-between w-full max-w-5xl px-5 py-5 sm:px-16">
@@ -160,10 +158,7 @@ export default function DashProfile() {
                 >
                   Update
                 </span>
-                <span
-                  className="text-red-500 text-sm cursor-pointer"
-                  onClick={handleRemoveImage}
-                >
+                <span className="text-red-500 text-sm cursor-pointer">
                   Remove
                 </span>
               </div>
