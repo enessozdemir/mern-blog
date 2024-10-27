@@ -1,7 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useSelector, useDispatch } from "react-redux";
 import { PiXThin, PiEqualsThin } from "react-icons/pi";
-import { Alert, Button, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  TextInput,
+} from "flowbite-react";
 import { useState, useRef, useEffect } from "react";
 import { storage } from "../../firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
@@ -24,9 +31,13 @@ export default function DashProfile() {
   const [imageFileUploading, setImageFileUploading] = useState(false);
   const [updateUserSuccess, setUpdateUserSuccess] = useState(null);
   const [updateUserError, setUpdateUserError] = useState(null);
+  const [deleteUserSuccess, setDeleteUserSuccess] = useState(null);
+  const [deleteUserError, setDeleteUserError] = useState(null);
   const [formData, setFormData] = useState({});
   const filePickerRef = useRef();
   const [dropdown, setDropdown] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -120,6 +131,30 @@ export default function DashProfile() {
     setUpdateUserError(null);
     setImageFileUrl(defaultImageUrl);
     setFormData({ ...formData, profilePicture: defaultImageUrl });
+  };
+
+  const handleDeleteUser = async (e) => {
+    e.preventDefault();
+    if (formData.delete !== "delete") {
+      setDeleteUserError("Please type 'delete' to confirm deletion!");
+      return;
+    }
+    try {
+      const response = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        setDeleteUserError(data.message);
+      } else {
+        setDeleteUserSuccess(data.message);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 1500);
+      }
+    } catch (error) {
+      setDeleteUserError(error.message);
+    }
   };
 
   return (
@@ -238,10 +273,79 @@ export default function DashProfile() {
           >
             Update
           </Button>
-          <Button color="failure" className="w-1/2">
+          <Button
+            color="failure"
+            className="w-1/2"
+            onClick={() => setShowModal(true)}
+          >
             Delete Account
           </Button>
         </div>
+
+        {showModal && (
+          <Modal
+            show={showModal}
+            onClose={() => setShowModal(false)}
+            popup
+            size="md"
+            className="text-gray-500"
+          >
+            <ModalHeader className="p-6">Delete Account</ModalHeader>
+            <ModalBody>
+              <p className="text-sm text-justify">
+                We are sorry to see you go. Once your account is deleted, all of
+                your content will be permanently gone, including your profile.
+                Hope, we meet again!
+              </p>
+
+              <div className="mt-3">
+                <p className="text-sm">
+                  To confirm deletion, type{" "}
+                  <span className="text-red-600">“delete”</span> below:
+                </p>
+                <TextInput
+                  id="delete"
+                  onChange={handleChange}
+                  className="mt-1"
+                />
+              </div>
+
+              <div className="flex justify-end gap-x-2 mt-5">
+                <Button
+                  color="light"
+                  className="font-extralight text-red-600 border border-red-600"
+                  onClick={() => setShowModal(false)}
+                  size="sm"
+                  pill
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleDeleteUser}
+                  color="failure"
+                  className="font-extralight"
+                  size="sm"
+                  disabled={formData.delete !== "delete"}
+                  pill
+                >
+                  Delete Account
+                </Button>
+              </div>
+
+              {deleteUserSuccess && (
+                <Alert color="success" className="w-full mt-5">
+                  {deleteUserSuccess}
+                </Alert>
+              )}
+
+              {deleteUserError && (
+                <Alert color="failure" className="w-full mt-5">
+                  {deleteUserError}
+                </Alert>
+              )}
+            </ModalBody>
+          </Modal>
+        )}
 
         {updateUserSuccess && (
           <Alert color="success" className="w-full sm:w-2/3 mt-5">

@@ -17,10 +17,11 @@ export default function SignUp() {
   const notify = () =>
     toast.success("User successfully created!", {
       position: "top-center",
-      autoClose: 3000,
+      autoClose: 1500,
       hideProgressBar: false,
-      closeOnClick: true,
+      closeOnClick: false,
       pauseOnHover: false,
+      pauseOnFocusLoss: false,
       draggable: false,
       theme: "dark",
       progress: undefined,
@@ -59,17 +60,18 @@ export default function SignUp() {
       });
       const data = await response.json();
       if (data.success === false) {
-        return setError(data.message);
+        setError(data.message);
       }
-
-      setLoading(false);
-      setFormdata({
-        username: "",
-        email: "",
-        password: "",
-        password_again: "",
-      });
-      notify();
+      if (response.ok) {
+        setLoading(false);
+        setFormdata({
+          username: "",
+          email: "",
+          password: "",
+          password_again: "",
+        });
+        notify();
+      }
     } catch (error) {
       setError(error.message);
       setLoading(false);
