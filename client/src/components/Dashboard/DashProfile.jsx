@@ -20,6 +20,7 @@ import {
   updateSuccess,
   updateFailure,
 } from "../../redux/user/userSlice";
+import { Link } from "react-router-dom";
 
 export default function DashProfile() {
   const { currentUser } = useSelector((state) => state.user);
@@ -278,6 +279,14 @@ export default function DashProfile() {
             Delete Account
           </Button>
         </div>
+
+        {currentUser.isAdmin && (
+          <Link to={"/create-post"}>
+            <Button type="button" color="success"  className="w-full sm:w-2/3 mt-4">
+              Create New Post
+            </Button>
+          </Link>
+        )}
 
         {showModal && (
           <Modal

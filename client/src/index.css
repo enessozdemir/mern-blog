@@ -11,4 +11,8 @@
     src: url('./assets/fonts/AironeFont.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
-  }
+}
+
+.ql-editor {
+    font-size: .9rem;
+}
