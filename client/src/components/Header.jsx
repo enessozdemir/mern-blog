@@ -5,18 +5,23 @@ import {
   Dropdown,
   DropdownDivider,
   DropdownItem,
+  Modal,
+  ModalBody,
+  ModalHeader,
   Navbar,
   TextInput,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { PiMoon, PiSun } from "react-icons/pi";
+import { FiUser, FiLogOut } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { signOutSuccess } from "../redux/user/userSlice";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
@@ -88,10 +93,12 @@ export default function Header() {
               }
             >
               <Link to={"/dashboard?tab=profile"}>
-                <DropdownItem>Profile</DropdownItem>
+                <DropdownItem icon={FiUser}>Profile</DropdownItem>
               </Link>
               <DropdownDivider />
-              <DropdownItem onClick={handleSignOut}>Sign Out</DropdownItem>
+              <DropdownItem icon={FiLogOut} onClick={() => setShowModal(true)}>
+                Sign Out
+              </DropdownItem>
             </Dropdown>
           ) : (
             <Link to="/sign-in">
@@ -108,6 +115,43 @@ export default function Header() {
           )}
         </div>
       </div>
+      {showModal && (
+        <Modal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          popup
+          size="md"
+          className="text-gray-500"
+        >
+          <ModalHeader className="p-6">Sign Out</ModalHeader>
+          <ModalBody>
+            <p className="text-sm text-justify">
+              Are you sure you want to sign out?
+            </p>
+
+            <div className="flex justify-end gap-x-2 mt-5">
+              <Button
+                color="light"
+                className="font-extralight text-red-600 border border-red-600"
+                onClick={() => setShowModal(false)}
+                size="sm"
+                pill
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSignOut}
+                color="failure"
+                className="font-extralight"
+                size="sm"
+                pill
+              >
+                Sign Out
+              </Button>
+            </div>
+          </ModalBody>
+        </Modal>
+      )}
     </Navbar>
   );
 }

@@ -92,10 +92,7 @@ export default function DashProfile() {
     e.preventDefault();
     setUpdateUserSuccess(null);
     setUpdateUserError(null);
-    if (Object.keys(formData).length === 0) {
-      setUpdateUserError("No changes made!");
-      return;
-    }
+
     if (imageFileUploading) {
       setUpdateUserError("Please wait for the image to upload!");
       return;
@@ -224,7 +221,7 @@ export default function DashProfile() {
                 </span>
               </div>
               <p className="text-light-gray text-sm">
-                Recommended: Square JPG, PNG.
+                Recommended: Square JPG, PNG. Max: 2MB
               </p>
             </div>
           </div>

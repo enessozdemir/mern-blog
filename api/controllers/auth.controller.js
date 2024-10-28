@@ -15,7 +15,7 @@ export const signUp = async (req, res, next) => {
     try {
         const user = await User.create({ username, email, password: hashedPassword });
         user.save();
-        return res.status(201).json({ message: 'User created successfully', data: user }); 
+        return res.status(201).json({ message: 'User created successfully', data: user });
     } catch (err) {
         return next(err);
     }
@@ -43,7 +43,7 @@ export const signIn = async (req, res, next) => {
 
         const { password: userPassword, ...rest } = user._doc;
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET);
         res.status(200).cookie('access_token', token, {
             httpOnly: true,
         }).json(rest);
@@ -61,7 +61,7 @@ export const signInWithGoogle = async (req, res, next) => {
         const user = await User.findOne({ email });
         if (user) {
             const { password, ...rest } = user._doc;
-            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET);
             return res.status(200).cookie('access_token', token, {
                 httpOnly: true,
             }).json(rest);
@@ -75,14 +75,12 @@ export const signInWithGoogle = async (req, res, next) => {
                 profilePicture: googlePhotoUrl
             });
             await newUser.save();
+            const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET);
+            const { password, ...rest } = newUser._doc;
+            return res.status(200).cookie('access_token', token, {
+                httpOnly: true,
+            }).json(rest);
         }
-
-        const { password, ...rest } = newUser._doc;
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET);
-        return res.status(200).cookie('access_token', token, {
-            httpOnly: true,
-        }).json(rest);
-
     } catch (error) {
         return next(error);
     }

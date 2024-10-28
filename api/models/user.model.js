@@ -20,8 +20,12 @@ const userSchema = new mongoose.Schema({
     profilePicture: {
         type: String,
         default: process.env.DEFAULT_IMAGE_URL
+    },
+    isAdmin: {
+        type: Boolean,
+        default: false
     }
-    },{ timestamps: true }   
+}, { timestamps: true }
 );
 
 const User = mongoose.model('User', userSchema);

@@ -21,7 +21,8 @@ export default {
       "light-gray": '#818181',
       "icon-color": '#b3b3b3',
       "lighter-icon-color": "#5e5e5e",
-      "soft-white": "#FFFAF0"
+      "soft-white": "#FFFAF0",
+      "dark": "#0C0C0C",
 
     })
   },

@@ -1,4 +1,8 @@
 import {
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
   Sidebar,
   SidebarItem,
   SidebarItemGroup,
@@ -16,6 +20,7 @@ export default function DashSidebar() {
   const dispatch = useDispatch();
   const { theme } = useSelector((state) => state.theme);
   const [tab, setTab] = useState(0);
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
     const currentTab = new URLSearchParams(location.search);
     const tabFromUrl = currentTab.get("tab");
@@ -34,7 +39,7 @@ export default function DashSidebar() {
       if (!response.ok) {
         console.log(data.message);
       } else {
-        // window.location.href = "/sign-in";
+        window.location.href = "/sign-in";
         dispatch(signOutSuccess());
       }
     } catch (error) {
@@ -64,7 +69,7 @@ export default function DashSidebar() {
             </SidebarItem>
           </Link>
           <SidebarItem
-            onClick={handleSignOut}
+            onClick={() => setShowModal(true)}
             icon={FiLogOut}
             className="cursor-pointer"
           >
@@ -72,6 +77,43 @@ export default function DashSidebar() {
           </SidebarItem>
         </SidebarItemGroup>
       </SidebarItems>
+      {showModal && (
+        <Modal
+          show={showModal}
+          onClose={() => setShowModal(false)}
+          popup
+          size="md"
+          className="text-gray-500"
+        >
+          <ModalHeader className="p-6">Sign Out</ModalHeader>
+          <ModalBody>
+            <p className="text-sm text-justify">
+              Are you sure you want to sign out?
+            </p>
+
+            <div className="flex justify-end gap-x-2 mt-5">
+              <Button
+                color="light"
+                className="font-extralight text-red-600 border border-red-600"
+                onClick={() => setShowModal(false)}
+                size="sm"
+                pill
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleSignOut}
+                color="failure"
+                className="font-extralight"
+                size="sm"
+                pill
+              >
+                Sign Out
+              </Button>
+            </div>
+          </ModalBody>
+        </Modal>
+      )}
     </Sidebar>
   );
 }
