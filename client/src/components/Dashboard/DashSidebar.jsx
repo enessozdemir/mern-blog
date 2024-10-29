@@ -9,7 +9,7 @@ import {
   SidebarItems,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FiUser, FiLogOut } from "react-icons/fi";
+import { FiUser, FiLogOut, FiFile } from "react-icons/fi";
 // import { LuLayoutDashboard } from "react-icons/lu";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -19,6 +19,7 @@ export default function DashSidebar() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { theme } = useSelector((state) => state.theme);
+  const { currentUser } = useSelector((state) => state.user);
   const [tab, setTab] = useState(0);
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
@@ -56,18 +57,25 @@ export default function DashSidebar() {
       }`}
     >
       <SidebarItems>
-        <SidebarItemGroup>
+        <SidebarItemGroup className="flex flex-col gap-1">
           <Link to="/dashboard?tab=profile">
             <SidebarItem
               active={tab === "profile"}
               icon={FiUser}
-              label={"User"}
+              label={currentUser.isAdmin ? "Admin" : "User"}
               labelColor={"dark"}
               as="div"
             >
               Profile
             </SidebarItem>
           </Link>
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=posts">
+              <SidebarItem active={tab === "posts"} icon={FiFile} as="div">
+                Posts
+              </SidebarItem>
+            </Link>
+          )}
           <SidebarItem
             onClick={() => setShowModal(true)}
             icon={FiLogOut}
