@@ -4,6 +4,7 @@
 
 *{
     font-family: 'Poppins', sans-serif; 
+    overscroll-behavior: none;
 }
 
 @font-face {

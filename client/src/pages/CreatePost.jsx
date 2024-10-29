@@ -1,36 +1,52 @@
-import { Button, FileInput, Select, TextInput } from "flowbite-react";
+import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
 import { useState, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { FiCamera } from "react-icons/fi";
 import { RiArrowDownWideLine, RiArrowUpWideLine } from "react-icons/ri";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import { useNavigate } from "react-router-dom";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase";
 
 export default function CreatePost() {
+  const navigate = useNavigate();
+  const [file, setFile] = useState(null);
+  const [imageUploadProgress, setImageUploadProgress] = useState(null);
+  const [imageUploadError, setImageUploadError] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
+  const [createError, setCreateError] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     category: "",
     content: "",
-    imageUrl: null,
+    image: null,
   });
+
   const imagePickerRef = useRef();
 
-  const handleContentChange = (content) => {
-    setFormData({ ...formData, content });
-  };
+  // const handleContentChange = (content) => {
+  //   setFormData({ ...formData, content });
+  // };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-    console.log(formData);
-  };
+  // const handleChange = (e) => {
+  //   setFormData({ ...formData, [e.target.id]: e.target.value });
+  //   console.log(formData);
+  // };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file && file.type.startsWith("image/")) {
-      const imageUrl = URL.createObjectURL(file);
-      setFormData({ ...formData, imageUrl: imageUrl });
-    }
-  };
+  // const handleImageChange = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file && file.type.startsWith("image/")) {
+  //     const image = URL.createObjectURL(file);
+  //     setFormData({ ...formData, image: image });
+  //   }
+  // };
 
   const getPreviewContent = (content) => {
     const plainText = content.replace(/<[^>]*>/g, "");
@@ -39,21 +55,96 @@ export default function CreatePost() {
       : plainText;
   };
 
+  const handleUploadImage = async () => {
+    try {
+      if (!file) {
+        setImageUploadError("Please select an image");
+        return;
+      }
+      setImageUploadError(null);
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + "-" + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          setImageUploadProgress(progress.toFixed(0));
+        },
+        (error) => {
+          setImageUploadError("Image upload failed");
+          setImageUploadProgress(null);
+          console.log(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageUploadProgress(null);
+            setImageUploadError(null);
+            setFormData({ ...formData, image: downloadURL });
+          });
+        }
+      );
+    } catch (error) {
+      setImageUploadError("Image upload failed");
+      setImageUploadProgress(null);
+      console.log(error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("/api/post/create", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        setCreateError(data.message);
+        return;
+      }
+      if (response.ok) {
+        setCreateError(null);
+        navigate(`/post/${data.slug}`);
+      }
+    } catch (error) {
+      setCreateError(error, "Something went wrong!");
+    }
+  };
+  console.log(formData);
   return (
     <div className="w-full container mx-auto flex flex-col sm:flex-row gap-x-2 justify-between px-5 py-10 mb-20 sm:px-0">
       {/* new post */}
       <div className="w-full sm:w-2/3">
         <h1 className="text-2xl font-semibold">Create a post</h1>
-        <form action="" className="flex flex-col gap-4 mt-5">
+        <form
+          action=""
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4 mt-5"
+        >
           <TextInput
             id="title"
             type="text"
             placeholder="Title"
             className="rounded"
-            onChange={handleChange}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
             required
           />
-          <Select id="category" onChange={handleChange}>
+          <Select
+            id="category"
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
+          >
             <option value="">Select a Category</option>
             <option value="Technology">Technology</option>
             <option value="Business">Business</option>
@@ -65,32 +156,51 @@ export default function CreatePost() {
             className={`flex flex-row justify-between border-4 border-icon-color border-dashed p-2`}
           >
             <FileInput
-              id="imageUrl"
+              id="image"
               ref={imagePickerRef}
               type="file"
               accept="image/*"
-              onChange={handleImageChange}
+              onChange={(e) => setFile(e.target.files[0])}
             />
             <Button
               type="button"
               size="sm"
               color="light"
-              onClick={() => imagePickerRef.current.click()}
+              onClick={handleUploadImage}
+              disabled={imageUploadProgress}
             >
-              Upload Image
+              {imageUploadProgress ? (
+                <div className="w-16 h-16">
+                  <CircularProgressbar
+                    value={imageUploadProgress}
+                    text={`${imageUploadProgress || 0}%`}
+                  />
+                </div>
+              ) : (
+                "Upload Image"
+              )}
             </Button>
           </div>
-
+          {imageUploadError && (
+            <Alert color="failure">{imageUploadError}</Alert>
+          )}
           <ReactQuill
             theme="snow"
             placeholder="Write your content here"
             className="mb-12 h-72"
-            onChange={handleContentChange}
+            onChange={(value) => {
+              setFormData({ ...formData, content: value });
+            }}
           />
 
           <Button type="submit" color="success">
             Create Post
           </Button>
+          {createError && (
+            <Alert className="mt-5" color="failure">
+              {createError}
+            </Alert>
+          )}
         </form>
       </div>
 
@@ -116,10 +226,10 @@ export default function CreatePost() {
               className="w-full h-60 rounded-tl-3xl rounded-tr-3xl border-b cursor-pointer"
               onClick={() => imagePickerRef.current.click()}
             >
-              {formData.imageUrl ? (
+              {formData.image ? (
                 <img
                   className="w-full h-full rounded-tl-3xl rounded-tr-3xl"
-                  src={formData.imageUrl}
+                  src={formData.image}
                   alt=""
                 />
               ) : (
