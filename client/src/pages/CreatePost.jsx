@@ -145,7 +145,7 @@ export default function CreatePost() {
               setFormData({ ...formData, category: e.target.value })
             }
           >
-            <option value="">Select a Category</option>
+            <option value="-">Select a Category</option>
             <option value="Technology">Technology</option>
             <option value="Business">Business</option>
             <option value="Travel">Travel</option>
