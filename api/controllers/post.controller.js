@@ -76,7 +76,7 @@ export const deletePost = async (req, res, next) => {
         if (!deletedPost) {
             return next(errorHandler(404, "Post not found"));
         }
-        res.status(200).json(deletedPost, "The post has been deleted");
+        res.status(200).json("The post has been deleted");
     } catch (error) {
         return next(error);
     }

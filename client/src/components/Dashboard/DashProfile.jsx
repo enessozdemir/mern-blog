@@ -159,7 +159,7 @@ export default function DashProfile() {
     <div className="flex flex-col sm:flex-row w-full">
       <div className="flex justify-between w-full max-w-5xl px-5 py-5 sm:px-16">
         <div className="font-normal flex-1">
-          <h1 className="font-medium text-2xl">Profile Information</h1>
+          <h1 className="text-2xl">Profile Information</h1>
           {/* photo */}
           <div className="flex flex-col mt-8">
             <input
@@ -361,9 +361,17 @@ export default function DashProfile() {
 
         <div className="block sm:hidden">
           {dropdown ? (
-            <PiXThin size={25} onClick={() => setDropdown(!dropdown)} />
+            <PiXThin
+              className="cursor-pointer"
+              size={25}
+              onClick={() => setDropdown(!dropdown)}
+            />
           ) : (
-            <PiEqualsThin size={25} onClick={() => setDropdown(!dropdown)} />
+            <PiEqualsThin
+              className="cursor-pointer"
+              size={25}
+              onClick={() => setDropdown(!dropdown)}
+            />
           )}
           {dropdown && (
             <div className="absolute top-28 left-0 w-full h-full">
@@ -378,7 +386,7 @@ export default function DashProfile() {
           <Button
             type="button"
             color="success"
-            className="w-[88%] ml-4 sm:ml-0 sm:w-full mt-4"
+            className="w-[88%] ml-4 sm:ml-0 sm:w-full sm:mt-4"
           >
             <div className="flex gap-x-1 items-center">
               <PiPlusBold className="w-4 h-4" />

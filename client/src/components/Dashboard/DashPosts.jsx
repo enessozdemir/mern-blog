@@ -17,6 +17,7 @@ import { Link } from "react-router-dom";
 export default function DashPosts() {
   const [posts, setPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
+  const [dropdown, setDropdown] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [showModal, setShowModal] = useState(false);
   const [postId, setPostId] = useState("");
@@ -34,7 +35,7 @@ export default function DashPosts() {
         }
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
 
@@ -71,20 +72,21 @@ export default function DashPosts() {
         setPosts((prev) => prev.filter((post) => post._id !== postId));
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
+
   useEffect(() => {
     if (currentUser.isAdmin) {
       handlePosts();
+      console.log(posts);
     }
-  }, [currentUser._id, posts]);
+  }, [currentUser._id]);
 
-  const [dropdown, setDropdown] = useState(false);
   return (
     <div>
       <div className="w-full flex justify-between px-5 sm:px-16 py-5">
-        <h1 className="font-medium text-2xl">Posts</h1>
+        <h1 className="text-2xl">Posts</h1>
         <div className="block sm:hidden">
           {dropdown ? (
             <PiXThin
@@ -100,7 +102,7 @@ export default function DashPosts() {
             />
           )}
           {dropdown && (
-            <div className="absolute top-28 left-0 w-full h-full">
+            <div className="absolute top-28 left-0 w-full h-full z-10">
               <DashSidebar />
             </div>
           )}
