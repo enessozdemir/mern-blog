@@ -12,7 +12,6 @@ import {
   TableBody,
   TableRow,
 } from "flowbite-react";
-import { Link } from "react-router-dom";
 import { FiCheck, FiX } from "react-icons/fi";
 
 export default function DashUsers() {
@@ -55,7 +54,24 @@ export default function DashUsers() {
     }
   };
 
-  const handleDeleteUser = async () => {};
+  const handleDeleteUser = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`/api/user/delete/${userId}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        console.log(data.message);
+      } else {
+        setUsers((prev) => prev.filter((user) => user._id !== userId));
+        setShowModal(false);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 
   useEffect(() => {
     if (currentUser.isAdmin) {
@@ -67,7 +83,11 @@ export default function DashUsers() {
     <div>
       <div className="w-full flex justify-between px-5 sm:px-16 py-5">
         <h1 className="text-2xl">Posts</h1>
-        <div className="block sm:hidden">
+        <div
+          className={`block sm:hidden transition-all duration-300 ease-in-out ${
+            dropdown ? "max-h-screen opacity-100" : "max-h-0 opacity-100"
+          }`}
+        >
           {dropdown ? (
             <PiXThin
               className="cursor-pointer"
