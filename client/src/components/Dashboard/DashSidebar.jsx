@@ -9,7 +9,7 @@ import {
   SidebarItems,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FiUser, FiLogOut, FiFile } from "react-icons/fi";
+import { FiUser, FiLogOut, FiFile, FiUsers } from "react-icons/fi";
 // import { LuLayoutDashboard } from "react-icons/lu";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
@@ -73,6 +73,13 @@ export default function DashSidebar() {
             <Link to="/dashboard?tab=posts">
               <SidebarItem active={tab === "posts"} icon={FiFile} as="div">
                 Posts
+              </SidebarItem>
+            </Link>
+          )}
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=users">
+              <SidebarItem active={tab === "users"} icon={FiUsers} as="div">
+                Users
               </SidebarItem>
             </Link>
           )}
