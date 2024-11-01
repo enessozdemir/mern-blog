@@ -2,10 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+
 *{
     font-family: 'Poppins', sans-serif; 
     overscroll-behavior: none;
+    @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;700&display=swap');
 }
+
 
 @font-face {
     font-family: 'Airone';
@@ -16,4 +19,37 @@
 
 .ql-editor {
     font-size: .9rem;
+}
+
+.post-content p{
+    margin-bottom: .5rem;
+    font-size: 18px;
+    line-height: 32px;
+    font-weight: 200;
+    font-family: 'Urbanist', sans-serif;
+}
+
+.post-content h1{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 1rem 0;
+}
+
+.post-content h2{
+    font-size: 1.3rem; 
+    font-weight: 600;
+    margin: 1.5rem 0 1rem 0;
+}
+
+.post-content a{
+    text-decoration: none;  
+    color: rgb(73, 149, 199);
+}
+
+.post-content a:hover{
+    text-decoration: underline;
+}
+
+.dark .post-content a{
+    color: rgb(73, 199, 130);
 }

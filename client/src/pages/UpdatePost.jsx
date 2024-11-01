@@ -47,6 +47,7 @@ export default function UpdatePost() {
         if (response.ok) {
           setUpdateError(null);
           setFormData(data.posts[0]);
+          console.log(data.posts[0]);
         }
       };
       fetchPost();
@@ -144,11 +145,10 @@ export default function UpdatePost() {
             type="text"
             placeholder="Title"
             className="rounded"
+            value={formData.title}
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            value={formData.title}
-            required
           />
           <Select
             id="category"
