@@ -139,9 +139,9 @@ export default function DashUsers() {
                     <Table.Cell>{user.email}</Table.Cell>
                     <Table.Cell>
                       {user.isAdmin ? (
-                        <FiCheck className="text-green-500" />
+                        <FiCheck className="text-green-500 ml-3" />
                       ) : (
-                        <FiX className="text-red-500" />
+                        <FiX className="text-red-500 ml-3" />
                       )}
                     </Table.Cell>
                     <Table.Cell>
@@ -190,9 +190,9 @@ export default function DashUsers() {
                     <Table.Cell>{user.email}</Table.Cell>
                     <Table.Cell>
                       {user.isAdmin ? (
-                        <FiCheck className="text-green-500" />
+                        <FiCheck className="text-green-500 ml-3" />
                       ) : (
-                        <FiX className="text-red-500" />
+                        <FiX className="text-red-500 ml-3" />
                       )}
                     </Table.Cell>
                     <Table.Cell>
