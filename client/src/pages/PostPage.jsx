@@ -2,6 +2,7 @@
 import { Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import CommentSection from "../components/CommentSection";
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -120,13 +121,19 @@ export default function PostPage() {
       />
 
       {/* post tags */}
-      <Link to={`/search?category=${post && post.category}`} className="mt-10">
+      <Link
+        to={`/search?category=${post && post.category}`}
+        className="mt-10 w-0"
+      >
         {post && post.category ? (
           <Button color="gray" pill>
             {post.category}
           </Button>
         ) : null}
       </Link>
+
+      {/* post comments */}
+      <CommentSection postId={post && post._id} />
     </main>
   );
 }
