@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { Alert, Button, Label, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,7 +24,6 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!formdata.email || !formdata.password) {
       return dispatch(signInFailure("Please fill in all fields!"));
     }
@@ -52,6 +51,10 @@ export default function SignIn() {
       dispatch(signInFailure(error.message));
     }
   };
+
+  useEffect(() => {
+    signInStart();
+  }, [error]);
 
   return (
     <div>

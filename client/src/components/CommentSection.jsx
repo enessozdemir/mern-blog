@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Button, Textarea } from "flowbite-react";
+import Comment from "./Comment";
 
 export default function CommentSection({ postId }) {
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   const [commentError, setCommentError] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(true);
@@ -31,6 +34,7 @@ export default function CommentSection({ postId }) {
       if (response.ok) {
         setComment("");
         setCommentError(null);
+        setComments([data.data, ...comments]);
         console.log(data.message);
       }
     } catch (error) {
@@ -39,9 +43,27 @@ export default function CommentSection({ postId }) {
     }
   };
 
+  const handleFetchComments = async () => {
+    try {
+      const response = await fetch(`/api/comment/comments/${postId}`);
+      const data = await response.json();
+      if (response.ok) {
+        setComments(data.data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleFetchComments();
+  }, [postId]);
+
   return (
     <div>
-      <h2 className="mt-20 text-xl font-bold">Comments (comment number)</h2>
+      <h2 className="mt-20 text-xl font-bold">
+        Comments ({comments.length || 0})
+      </h2>
       <form className="border shadow-lg mt-5 p-5" onSubmit={handleSubmit}>
         <div className="flex flex-col">
           <Textarea
@@ -105,6 +127,17 @@ export default function CommentSection({ postId }) {
           </Alert>
         )}
       </form>
+
+      {/* Comments */}
+      {comments.lenght === 0 ? (
+        <p>No comments yet.</p>
+      ) : (
+        <>
+          {comments.map((comment) => (
+            <Comment key={comment._id} comment={comment} />
+          ))}
+        </>
+      )}
     </div>
   );
 }
