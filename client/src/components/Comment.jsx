@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import moment from "moment";
 import { FiThumbsUp } from "react-icons/fi";
 import { useSelector } from "react-redux";
+import { PiDotsThreeOutlineFill } from "react-icons/pi";
+import { Dropdown, DropdownItem } from "flowbite-react";
 
-export default function Comment({ comment, onLike }) {
+export default function Comment({ comment, onLike, onDelete }) {
   const [user, setUser] = useState({});
   const { currentUser } = useSelector((state) => state.user);
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -31,7 +34,7 @@ export default function Comment({ comment, onLike }) {
         />
       </div>
       <div className="flex-1">
-        <div>
+        <div className="flex justify-between">
           <div className="flex items-center mb-1">
             <span className="text-sm mr-2 font-semibold">
               {user ? `@${user.username}` : "Not found!"}
@@ -40,12 +43,26 @@ export default function Comment({ comment, onLike }) {
               {moment(comment.createdAt).fromNow()}
             </span>
           </div>
-          <p className=" mb-2 text-sm">{comment.content}</p>
+          <Dropdown
+            arrowIcon={false}
+            label={<PiDotsThreeOutlineFill alt="dropdown" />}
+            inline
+          >
+            {currentUser.isAdmin || currentUser._id === comment.userId ? (
+              <DropdownItem
+                className="text-xs"
+                onClick={() => onDelete(comment._id)}
+              >
+                Delete
+              </DropdownItem>
+            ) : null}
+          </Dropdown>
         </div>
+        <p className=" mb-2 text-sm">{comment.content}</p>
         <div className="flex items-center text-gray-500 gap-0.5 mt-5">
           <button
             type="button"
-            className={`hover:text-blue-600 ${
+            className={`text-md hover:text-blue-600 ${
               currentUser &&
               comment.likes.includes(currentUser._id) &&
               "!text-blue-600"
@@ -54,7 +71,7 @@ export default function Comment({ comment, onLike }) {
           >
             <FiThumbsUp />
           </button>
-          <p className="pt-0.5">{comment.numberOfLikes}</p>
+          <p className="text-sm pt-1">{comment.numberOfLikes}</p>
         </div>
       </div>
     </div>

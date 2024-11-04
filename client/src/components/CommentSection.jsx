@@ -2,7 +2,14 @@
 /* eslint-disable react/prop-types */
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import { Alert, Button, Textarea } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  Textarea,
+} from "flowbite-react";
 import Comment from "./Comment";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +19,8 @@ export default function CommentSection({ postId }) {
   const [commentError, setCommentError] = useState(null);
   const { currentUser } = useSelector((state) => state.user);
   const [isOpen, setIsOpen] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -83,6 +92,24 @@ export default function CommentSection({ postId }) {
               : comment
           )
         );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    setShowModal(false);
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const response = await fetch(`/api/comment/delete-comment/${commentId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setComments(comments.filter((comment) => comment._id !== commentId));
       }
     } catch (error) {
       console.log(error.message);
@@ -168,10 +195,49 @@ export default function CommentSection({ postId }) {
               key={comment._id}
               comment={comment}
               onLike={handleLikeComment}
+              onDelete={(commentId) => {
+                setShowModal(true);
+                setCommentToDelete(commentId);
+              }}
             />
           ))}
         </>
       )}
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+        className="text-gray-500"
+      >
+        <ModalHeader className="p-6">Delete Comment</ModalHeader>
+        <ModalBody>
+          <p className="text-sm text-justify">
+            Are you sure you want to delete this comment?
+          </p>
+
+          <div className="flex justify-end gap-x-2 mt-5">
+            <Button
+              color="light"
+              className="font-extralight text-red-600 border border-red-600"
+              onClick={() => setShowModal(false)}
+              size="sm"
+              pill
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => handleDeleteComment(commentToDelete)}
+              color="failure"
+              className="font-extralight"
+              size="sm"
+              pill
+            >
+              Delete Comment
+            </Button>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
   );
 }
