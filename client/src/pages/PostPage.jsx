@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import CommentSection from "../components/CommentSection";
 import PostCard from "../components/PostCard";
-import { useSelector } from "react-redux";
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -15,7 +14,6 @@ export default function PostPage() {
   const [authorId, setAuthorId] = useState("");
   const [author, setAuthor] = useState({});
   const [recentPosts, setRecentPosts] = useState(null);
-  const { currentUser } = useSelector((state) => state.user);
 
   const fetchPost = async () => {
     try {
@@ -63,7 +61,7 @@ export default function PostPage() {
 
   const fetchRecentPosts = async () => {
     try {
-      const response = await fetch("/api/post/posts?limit=2");
+      const response = await fetch("/api/post/posts?limit=4");
       const data = await response.json();
       if (response.ok) {
         setRecentPosts(data.posts);
@@ -157,11 +155,15 @@ export default function PostPage() {
 
       <div className="mt-20">
         <h1 className="">
-          More from <span className="text-gray-400">@{currentUser.username}</span>
+          More from <span className="text-gray-400">@{author.username}</span>
         </h1>
-        <div className="flex justify-between gap-5 flex-nowrap">
+        <div className="flex flex-wrap gap-5 justify-center">
           {recentPosts &&
-            recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
+            recentPosts.map((post) => (
+              <div key={post._id} className="sm:w-[48%] w-[90%]">
+                <PostCard post={post} />
+              </div>
+            ))}
         </div>
       </div>
     </main>

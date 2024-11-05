@@ -2,6 +2,7 @@
 import { theme } from 'flowbite-react'
 import flowbite from 'flowbite-react/tailwind'
 
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -27,6 +28,6 @@ export default {
     })
   },
   plugins: [
-    flowbite.plugin()
+    flowbite.plugin(),
   ],
 }
