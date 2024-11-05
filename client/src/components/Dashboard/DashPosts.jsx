@@ -109,11 +109,11 @@ export default function DashPosts() {
         </div>
       </div>
 
-      <div className="w-full px-5 sm:px-16 mb-10">
+      <div className="overflow-scroll w-full px-5 sm:px-16 mb-10">
         {currentUser.isAdmin && posts.length > 0 ? (
           <>
             {/* web table */}
-            <Table hoverable className="shadow-sm hidden sm:block">
+            <Table hoverable className="shadow-sm">
               <Table.Head>
                 <Table.HeadCell>Update Date</Table.HeadCell>
                 <Table.HeadCell>Image</Table.HeadCell>
@@ -171,39 +171,7 @@ export default function DashPosts() {
                 </TableBody>
               ))}
             </Table>
-
-            {/* mobile table */}
-            <Table hoverable className="shadow-sm block sm:hidden">
-              <Table.Head>
-                <Table.HeadCell>Image</Table.HeadCell>
-                <Table.HeadCell>Title</Table.HeadCell>
-                <Table.HeadCell>Category</Table.HeadCell>
-              </Table.Head>
-              {posts.map((post) => (
-                <TableBody key={posts._id} className="divide-y">
-                  <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell>
-                      <Link to={`/post/${post.slug}`}>
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-20 h-10 object-cover bg-gray-500"
-                        />
-                      </Link>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <Link
-                        className="font-medium text-gray-900 dark:text-white"
-                        to={`/post/${post.slug}`}
-                      >
-                        {post.title}
-                      </Link>
-                    </Table.Cell>
-                    <Table.Cell>{post.category}</Table.Cell>
-                  </TableRow>
-                </TableBody>
-              ))}
-            </Table>
+            
             {showMore && (
               <button
                 className="block mx-auto my-5 text-teal-400"

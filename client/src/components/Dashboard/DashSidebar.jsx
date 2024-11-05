@@ -14,6 +14,7 @@ import { FiUser, FiLogOut, FiFile, FiUsers } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { signOutSuccess } from "../../redux/user/userSlice";
+import { TfiComment } from "react-icons/tfi";
 
 export default function DashSidebar() {
   const location = useLocation();
@@ -73,6 +74,17 @@ export default function DashSidebar() {
             <Link to="/dashboard?tab=posts">
               <SidebarItem active={tab === "posts"} icon={FiFile} as="div">
                 Posts
+              </SidebarItem>
+            </Link>
+          )}
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=comments">
+              <SidebarItem
+                active={tab === "comments"}
+                icon={TfiComment}
+                as="div"
+              >
+                Comments
               </SidebarItem>
             </Link>
           )}

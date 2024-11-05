@@ -82,7 +82,7 @@ export default function DashUsers() {
   return (
     <div>
       <div className="w-full flex justify-between px-5 sm:px-16 py-5">
-        <h1 className="text-2xl">Posts</h1>
+        <h1 className="text-2xl">Users</h1>
         <div
           className={`block sm:hidden transition-all duration-300 ease-in-out ${
             dropdown ? "max-h-screen opacity-100" : "max-h-0 opacity-100"
@@ -109,11 +109,11 @@ export default function DashUsers() {
         </div>
       </div>
 
-      <div className="px-5 sm:px-16 mb-10">
+      <div className="overflow-scroll px-5 sm:px-16 mb-10">
         {currentUser.isAdmin && users.length > 0 ? (
           <>
             {/* web table */}
-            <Table hoverable className="shadow-sm hidden sm:block">
+            <Table hoverable className="shadow-sm">
               <Table.Head>
                 <Table.HeadCell>Create Date</Table.HeadCell>
                 <Table.HeadCell>Image</Table.HeadCell>
@@ -160,56 +160,6 @@ export default function DashUsers() {
               ))}
             </Table>
 
-            {/* mobile table */}
-            <Table
-              hoverable
-              className="overflow-scroll shadow-sm block sm:hidden"
-            >
-              <Table.Head>
-                <Table.HeadCell>Create Date</Table.HeadCell>
-                <Table.HeadCell>Image</Table.HeadCell>
-                <Table.HeadCell>Username</Table.HeadCell>
-                <Table.HeadCell>Email</Table.HeadCell>
-                <Table.HeadCell>Admin</Table.HeadCell>
-                <Table.HeadCell>Delete</Table.HeadCell>
-              </Table.Head>
-              {users.map((user) => (
-                <TableBody key={user._id} className="divide-y">
-                  <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table className="mt-6 ml-6">
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </Table>
-                    <Table.Cell>
-                      <img
-                        src={user.profilePicture ? user.profilePicture : ""}
-                        alt={"No Image"}
-                        className="w-10 h-10 rounded-full object-cover bg-gray-500"
-                      />
-                    </Table.Cell>
-                    <Table.Cell>{user.username}</Table.Cell>
-                    <Table.Cell>{user.email}</Table.Cell>
-                    <Table.Cell>
-                      {user.isAdmin ? (
-                        <FiCheck className="text-green-500 ml-3" />
-                      ) : (
-                        <FiX className="text-red-500 ml-3" />
-                      )}
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span
-                        className="font-medium text-red-500 hover:underline cursor-pointer"
-                        onClick={() => {
-                          setUserId(user._id);
-                          setShowModal(true);
-                        }}
-                      >
-                        Delete
-                      </span>
-                    </Table.Cell>
-                  </TableRow>
-                </TableBody>
-              ))}
-            </Table>
             {showMore && (
               <button
                 className="block mx-auto my-5 text-teal-400"
