@@ -3,6 +3,8 @@ import { Button, Spinner } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import CommentSection from "../components/CommentSection";
+import PostCard from "../components/PostCard";
+import { useSelector } from "react-redux";
 
 export default function PostPage() {
   const { postSlug } = useParams();
@@ -12,6 +14,8 @@ export default function PostPage() {
   const [post, setPost] = useState(null);
   const [authorId, setAuthorId] = useState("");
   const [author, setAuthor] = useState({});
+  const [recentPosts, setRecentPosts] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
 
   const fetchPost = async () => {
     try {
@@ -57,6 +61,18 @@ export default function PostPage() {
     }
   };
 
+  const fetchRecentPosts = async () => {
+    try {
+      const response = await fetch("/api/post/posts?limit=2");
+      const data = await response.json();
+      if (response.ok) {
+        setRecentPosts(data.posts);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     fetchPost();
   }, [postSlug]);
@@ -64,6 +80,10 @@ export default function PostPage() {
   useEffect(() => {
     handleAuthor();
   }, [authorId]);
+
+  useEffect(() => {
+    fetchRecentPosts();
+  }, []);
 
   if (loading)
     return (
@@ -134,6 +154,16 @@ export default function PostPage() {
 
       {/* post comments */}
       <CommentSection postId={post && post._id} />
+
+      <div className="mt-20">
+        <h1 className="">
+          More from <span className="text-gray-400">@{currentUser.username}</span>
+        </h1>
+        <div className="flex justify-between gap-5 flex-nowrap">
+          {recentPosts &&
+            recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
+        </div>
+      </div>
     </main>
   );
 }
