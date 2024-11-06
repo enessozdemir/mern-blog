@@ -10,6 +10,9 @@ import {
   ModalHeader,
   Table,
   TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
   TableRow,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
@@ -114,23 +117,23 @@ export default function DashPosts() {
           <>
             {/* web table */}
             <Table hoverable className="shadow-sm">
-              <Table.Head>
-                <Table.HeadCell>Update Date</Table.HeadCell>
-                <Table.HeadCell>Image</Table.HeadCell>
-                <Table.HeadCell>Title</Table.HeadCell>
-                <Table.HeadCell>Category</Table.HeadCell>
-                <Table.HeadCell>
+              <TableHead>
+                <TableHeadCell>Update Date</TableHeadCell>
+                <TableHeadCell>Image</TableHeadCell>
+                <TableHeadCell>Title</TableHeadCell>
+                <TableHeadCell>Category</TableHeadCell>
+                <TableHeadCell>
                   <span>Edit</span>
-                </Table.HeadCell>
-                <Table.HeadCell>Delete</Table.HeadCell>
-              </Table.Head>
+                </TableHeadCell>
+                <TableHeadCell>Delete</TableHeadCell>
+              </TableHead>
               {posts.map((post) => (
                 <TableBody key={post._id} className="divide-y">
                   <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <Table className="mt-6 ml-6">
                       {new Date(post.updatedAt).toLocaleDateString()}
                     </Table>
-                    <Table.Cell>
+                    <TableCell>
                       <Link to={`/post/${post.slug}`}>
                         <img
                           src={post.image ? post.image : ""}
@@ -138,25 +141,25 @@ export default function DashPosts() {
                           className="w-20 h-10 object-cover bg-gray-500"
                         />
                       </Link>
-                    </Table.Cell>
-                    <Table.Cell>
+                    </TableCell>
+                    <TableCell>
                       <Link
                         className="font-medium text-gray-900 dark:text-white"
                         to={`/post/${post.slug}`}
                       >
                         {post.title}
                       </Link>
-                    </Table.Cell>
-                    <Table.Cell>{post.category}</Table.Cell>
-                    <Table.Cell>
+                    </TableCell>
+                    <TableCell>{post.category}</TableCell>
+                    <TableCell>
                       <Link
                         className="text-teal-500 hover:underline"
                         to={`/update-post/${post._id}`}
                       >
                         <span>Edit</span>
                       </Link>
-                    </Table.Cell>
-                    <Table.Cell>
+                    </TableCell>
+                    <TableCell>
                       <span
                         className="font-medium text-red-500 hover:underline cursor-pointer"
                         onClick={() => {
@@ -166,12 +169,12 @@ export default function DashPosts() {
                       >
                         Delete
                       </span>
-                    </Table.Cell>
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               ))}
             </Table>
-            
+
             {showMore && (
               <button
                 className="block mx-auto my-5 text-teal-400"

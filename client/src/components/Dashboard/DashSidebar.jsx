@@ -9,12 +9,18 @@ import {
   SidebarItems,
 } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { FiUser, FiLogOut, FiFile, FiUsers } from "react-icons/fi";
+import {
+  FiUser,
+  FiLogOut,
+  FiFile,
+  FiUsers,
+  FiMessageSquare,
+} from "react-icons/fi";
 // import { LuLayoutDashboard } from "react-icons/lu";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { signOutSuccess } from "../../redux/user/userSlice";
-import { TfiComment } from "react-icons/tfi";
+import { MdOutlineManageAccounts } from "react-icons/md";
 
 export default function DashSidebar() {
   const location = useLocation();
@@ -59,6 +65,19 @@ export default function DashSidebar() {
     >
       <SidebarItems>
         <SidebarItemGroup className="flex flex-col gap-1">
+          {currentUser && currentUser.isAdmin && (
+            <Link to="/dashboard?tab=dash">
+              <SidebarItem
+                active={tab === "dash" || !tab}
+                icon={MdOutlineManageAccounts}
+                labelColor={"dark"}
+                as="div"
+              >
+                Dashboard
+              </SidebarItem>
+            </Link>
+          )}
+
           <Link to="/dashboard?tab=profile">
             <SidebarItem
               active={tab === "profile"}
@@ -81,7 +100,7 @@ export default function DashSidebar() {
             <Link to="/dashboard?tab=comments">
               <SidebarItem
                 active={tab === "comments"}
-                icon={TfiComment}
+                icon={FiMessageSquare}
                 as="div"
               >
                 Comments

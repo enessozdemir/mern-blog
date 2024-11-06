@@ -10,6 +10,9 @@ import {
   ModalHeader,
   Table,
   TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
   TableRow,
 } from "flowbite-react";
 import { FiCheck, FiX } from "react-icons/fi";
@@ -114,37 +117,37 @@ export default function DashUsers() {
           <>
             {/* web table */}
             <Table hoverable className="shadow-sm">
-              <Table.Head>
-                <Table.HeadCell>Create Date</Table.HeadCell>
-                <Table.HeadCell>Image</Table.HeadCell>
-                <Table.HeadCell>Username</Table.HeadCell>
-                <Table.HeadCell>Email</Table.HeadCell>
-                <Table.HeadCell>Admin</Table.HeadCell>
-                <Table.HeadCell>Delete</Table.HeadCell>
-              </Table.Head>
+              <TableHead>
+                <TableHeadCell>Create Date</TableHeadCell>
+                <TableHeadCell>Image</TableHeadCell>
+                <TableHeadCell>Username</TableHeadCell>
+                <TableHeadCell>Email</TableHeadCell>
+                <TableHeadCell>Admin</TableHeadCell>
+                <TableHeadCell>Delete</TableHeadCell>
+              </TableHead>
               {users.map((user) => (
                 <TableBody key={user._id} className="divide-y">
                   <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <Table className="mt-6 ml-6">
                       {new Date(user.createdAt).toLocaleDateString()}
                     </Table>
-                    <Table.Cell>
+                    <TableCell>
                       <img
                         src={user.profilePicture ? user.profilePicture : ""}
                         alt={"No Image"}
                         className="w-10 h-10 rounded-full object-cover bg-gray-500"
                       />
-                    </Table.Cell>
-                    <Table.Cell>{user.username}</Table.Cell>
-                    <Table.Cell>{user.email}</Table.Cell>
-                    <Table.Cell>
+                    </TableCell>
+                    <TableCell>{user.username}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
                       {user.isAdmin ? (
                         <FiCheck className="text-green-500 ml-3" />
                       ) : (
                         <FiX className="text-red-500 ml-3" />
                       )}
-                    </Table.Cell>
-                    <Table.Cell>
+                    </TableCell>
+                    <TableCell>
                       <span
                         className="font-medium text-red-500 hover:underline cursor-pointer"
                         onClick={() => {
@@ -154,7 +157,7 @@ export default function DashUsers() {
                       >
                         Delete
                       </span>
-                    </Table.Cell>
+                    </TableCell>
                   </TableRow>
                 </TableBody>
               ))}

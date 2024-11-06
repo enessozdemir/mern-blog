@@ -1,5 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Modal, Table, Button, ModalHeader, ModalBody } from "flowbite-react";
+import {
+  Modal,
+  Table,
+  Button,
+  ModalHeader,
+  ModalBody,
+  TableHead,
+  TableHeadCell,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "flowbite-react";
 import { useEffect, useState } from "react";
 import { PiEqualsThin, PiXThin } from "react-icons/pi";
 import { useSelector } from "react-redux";
@@ -101,25 +112,25 @@ export default function DashComments() {
         {currentUser.isAdmin && comments.length > 0 ? (
           <>
             <Table hoverable className="shadow-sm">
-              <Table.Head>
-                <Table.HeadCell>Date Updated</Table.HeadCell>
-                <Table.HeadCell>Comment Content</Table.HeadCell>
-                <Table.HeadCell>Number of likes</Table.HeadCell>
-                <Table.HeadCell>Post Id</Table.HeadCell>
-                <Table.HeadCell>User Id</Table.HeadCell>
-                <Table.HeadCell>Delete</Table.HeadCell>
-              </Table.Head>
+              <TableHead>
+                <TableHeadCell>Date Updated</TableHeadCell>
+                <TableHeadCell>Comment Content</TableHeadCell>
+                <TableHeadCell>Number of likes</TableHeadCell>
+                <TableHeadCell>Post Id</TableHeadCell>
+                <TableHeadCell>User Id</TableHeadCell>
+                <TableHeadCell>Delete</TableHeadCell>
+              </TableHead>
               {comments.map((comment) => (
-                <Table.Body className="divide-y" key={comment._id}>
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <Table.Cell>
+                <TableBody className="divide-y" key={comment._id}>
+                  <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                    <TableCell>
                       {new Date(comment.updatedAt).toLocaleDateString()}
-                    </Table.Cell>
-                    <Table.Cell>{comment.content}</Table.Cell>
-                    <Table.Cell>{comment.numberOfLikes}</Table.Cell>
-                    <Table.Cell>{comment.postId}</Table.Cell>
-                    <Table.Cell>{comment.userId}</Table.Cell>
-                    <Table.Cell>
+                    </TableCell>
+                    <TableCell>{comment.content}</TableCell>
+                    <TableCell>{comment.numberOfLikes}</TableCell>
+                    <TableCell>{comment.postId}</TableCell>
+                    <TableCell>{comment.userId}</TableCell>
+                    <TableCell>
                       <span
                         onClick={() => {
                           setShowModal(true);
@@ -129,9 +140,9 @@ export default function DashComments() {
                       >
                         Delete
                       </span>
-                    </Table.Cell>
-                  </Table.Row>
-                </Table.Body>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
               ))}
             </Table>
             {showMore && (

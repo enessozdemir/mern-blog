@@ -43,7 +43,7 @@ function App() {
 export default function Root() {
   return (
     <BrowserRouter>
-    <ScrollToTop />
+      <ScrollToTop />
       <App />
     </BrowserRouter>
   );
