@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Button,
@@ -11,7 +11,7 @@ import {
   Navbar,
   TextInput,
 } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { PiMoon, PiSun } from "react-icons/pi";
 import { FiUser, FiLogOut } from "react-icons/fi";
@@ -22,9 +22,19 @@ import { signOutSuccess } from "../redux/user/userSlice";
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { currentUser } = useSelector((state) => state.user);
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const searchTermFromUrl = urlParams.get("searchTerm");
+    if (searchTermFromUrl) {
+      setSearchTerm(searchTermFromUrl);
+    }
+  }, [location.search]);
 
   const handleSignOut = async () => {
     try {
@@ -44,6 +54,13 @@ export default function Header() {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm) {
+      window.location.href = `/search?searchTerm=${searchTerm}`;
+    }
+  };
+
   return (
     <Navbar className="border-b-2 px-5">
       <Link
@@ -56,12 +73,14 @@ export default function Header() {
       </Link>
 
       <div className="flex gap-10 md:order-2">
-        <form action="">
+        <form onSubmit={handleSubmit}>
           <TextInput
             type="text"
             placeholder="Search"
             rightIcon={AiOutlineSearch}
             className="hidden lg:inline"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
 

@@ -1,7 +1,165 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FiCamera } from "react-icons/fi";
+
 export default function Home() {
+  const [posts, setPosts] = useState([]);
+  const [activeTab, setActiveTab] = useState("ForYou");
+  const navigate = useNavigate();
+
+  const getPreviewContent = (content) => {
+    const plainText = content.replace(/<[^>]*>/g, "");
+    return plainText.length > 250
+      ? plainText.substring(0, 250) + "..."
+      : plainText;
+  };
+
+  const getAuthor = async (userId) => {
+    try {
+      const response = await fetch(`/api/user/author/${userId}`);
+      if (!response.ok) {
+        console.log("Author not found");
+      }
+      return await response.json();
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
+  };
+
+  const getPosts = async () => {
+    try {
+      const response = await fetch("/api/post/posts");
+      const data = await response.json();
+
+      if (response.ok) {
+        const postsWithAuthors = await Promise.all(
+          data.posts.map(async (post) => {
+            const author = await getAuthor(post.userId);
+            return { ...post, author };
+          })
+        );
+        setPosts(postsWithAuthors);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  console.log(posts);
+
   return (
-    <div className="min-h-screen container mx-auto py-5">
-      List of posts.
+    <div className="min-h-screen container mx-auto sm:px-0 px-5 pt-8 pb-40">
+      <div className="h-10">
+        <div className="flex gap-9 text-sm text-gray-500 dark:text-silver border-b dark:border-gray-600">
+          <p
+            className={`pb-5 ${
+              activeTab === "ForYou" &&
+              "text-black dark:text-soft-white border-b border-black dark:border-white"
+            } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
+            onClick={() => setActiveTab("ForYou")}
+          >
+            For you
+          </p>
+          <p
+            className={`pb-5 ${
+              activeTab === "Technology" &&
+              "text-black dark:text-soft-white border-b border-black dark:border-white"
+            } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
+            onClick={() => setActiveTab("Technology")}
+          >
+            Technology
+          </p>
+          <p
+            className={`pb-5 ${
+              activeTab === "Business" &&
+              "text-black dark:text-soft-white border-b border-black dark:border-white"
+            } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
+            onClick={() => setActiveTab("Business")}
+          >
+            Business
+          </p>
+          <p
+            className={`pb-5 ${
+              activeTab === "Travel" &&
+              "text-black dark:text-soft-white border-b border-black dark:border-white"
+            } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
+            onClick={() => setActiveTab("Travel")}
+          >
+            Travel
+          </p>
+          <p
+            className={`pb-5 ${
+              activeTab === "Other" &&
+              "text-black dark:text-soft-white border-b border-black dark:border-white"
+            } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
+            onClick={() => setActiveTab("Other")}
+          >
+            Other
+          </p>
+        </div>
+      </div>
+
+      {/* posts */}
+      <div className="flex flex-wrap justify-center gap-10 mt-10">
+        {posts.map((post) => (
+          <div
+            key={post._id}
+            className="sm:w-[48%] w-full sm:px-0 cursor-pointer transition-all duration-300 mt-5"
+            onClick={() => navigate(`/post/${post.slug}`)}
+          >
+            <div className="h-[600px] rounded-tl-3xl rounded-tr-3xl overflow-hidden border dark:border-gray-600">
+              <div className="cursor-pointer">
+                {post.image ? (
+                  <Link to={`/post/${post.slug}`}>
+                    <img
+                      className="h-72 w-full rounded-tl-3xl rounded-tr-3xl object-fill"
+                      src={post.image}
+                      alt=""
+                    />
+                  </Link>
+                ) : (
+                  <div className="flex justify-center pt-20">
+                    <FiCamera size={85} />
+                  </div>
+                )}
+                <div className="flex gap-2 items-center px-3 mt-5">
+                  <img
+                    src={post.author?.profilePicture || ""}
+                    alt=""
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <p className="text-sm text-gray-500 font-bold">
+                    @{post.author?.username || "unknown"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col mt-5 px-3">
+                <div className="flex flex-col h-[80px]">
+                  <h2 className="text-2xl font-semibold line-clamp-2">
+                    {post.title}
+                  </h2>
+                  <p className={`h-20px text-xs text-icon-color underline`}>
+                    {post.category}
+                  </p>
+                </div>
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: getPreviewContent(post.content),
+                  }}
+                  className="text-sm text-gray-500 text-justify mt-7  space-y-4"
+                />
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
-  )
+  );
 }

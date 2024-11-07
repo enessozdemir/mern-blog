@@ -110,7 +110,6 @@ export const getUserById = async (req, res, next) => {
     }
 };
 
-
 export const getOneUser = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.userId).select('-password');

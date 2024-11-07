@@ -24,6 +24,7 @@ export default {
       "lighter-icon-color": "#5e5e5e",
       "soft-white": "#FFFAF0",
       "dark": "#0C0C0C",
+      "silver": "#CCCCCC",
 
     })
   },

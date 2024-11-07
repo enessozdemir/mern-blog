@@ -145,11 +145,11 @@ export default function CreatePost() {
               setFormData({ ...formData, category: e.target.value })
             }
           >
-            <option value="-">Select a Category</option>
-            <option value="Technology">Technology</option>
-            <option value="Business">Business</option>
-            <option value="Travel">Travel</option>
-            <option value="Other">Other</option>
+            <option value="uncategorized">Select a Category</option>
+            <option value="technology">Technology</option>
+            <option value="business">Business</option>
+            <option value="travel">Travel</option>
+            <option value="other">Other</option>
           </Select>
 
           <div

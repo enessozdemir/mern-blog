@@ -14,7 +14,7 @@ export default function PostCard({ post }) {
   };
   return (
     <div
-      className="mt-0 cursor-pointer hover:scale-105 transition-all duration-300"
+      className="mt-0 cursor-pointer transition-all duration-300"
       onClick={() => navigate(`/post/${post.slug}`)}
     >
       <div className="h-[450px] rounded-tl-3xl rounded-tr-3xl overflow-hidden border dark:border-gray-600 mt-10">

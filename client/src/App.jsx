@@ -11,6 +11,7 @@ import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
+import SearchPage from "./pages/SearchPage";
 
 function App() {
   const location = useLocation();
@@ -26,6 +27,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/search" element={<SearchPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>

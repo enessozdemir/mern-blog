@@ -117,7 +117,7 @@ export default function DashComponent() {
           </div>
           <div className="flex  gap-2 text-sm">
             <span className="text-green-500 flex items-center">
-              <FiArrowUp />
+              {lastMonthUsers > 0 ? <FiArrowUp /> : null}
               {lastMonthUsers}
             </span>
             <div className="text-gray-500">Last month</div>
@@ -135,7 +135,7 @@ export default function DashComponent() {
           </div>
           <div className="flex  gap-2 text-sm">
             <span className="text-green-500 flex items-center">
-              <FiArrowUp />
+              {lastMonthComments > 0 ? <FiArrowUp /> : null}
               {lastMonthComments}
             </span>
             <div className="text-gray-500">Last month</div>
@@ -151,7 +151,7 @@ export default function DashComponent() {
           </div>
           <div className="flex  gap-2 text-sm">
             <span className="text-green-500 flex items-center">
-              <FiArrowUp />
+              {lastMonthPosts > 0 ? <FiArrowUp /> : null}
               {lastMonthPosts}
             </span>
             <div className="text-gray-500">Last month</div>
