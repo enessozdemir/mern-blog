@@ -40,14 +40,33 @@ export default function FooterCom() {
               title="Categories"
             />
             <FooterLinkGroup col className="text-sm !text-light-gray">
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink
+                href="/search?category=technology"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Technology
               </FooterLink>
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink
+                href="/search?category=business"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Business
               </FooterLink>
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink
+                href="/search?category=travel"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Travel
+              </FooterLink>
+              <FooterLink
+                href="/search?category=other"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Other
               </FooterLink>
             </FooterLinkGroup>
           </div>
@@ -58,13 +77,13 @@ export default function FooterCom() {
               title="Support"
             />
             <FooterLinkGroup col className="text-sm !text-light-gray">
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink href="#" rel="noopener noreferrer">
                 FAQs
               </FooterLink>
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink href="#" rel="noopener noreferrer">
                 Help Center
               </FooterLink>
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink href="#" rel="noopener noreferrer">
                 Community Guidelines
               </FooterLink>
             </FooterLinkGroup>
@@ -76,16 +95,16 @@ export default function FooterCom() {
               title="About"
             />
             <FooterLinkGroup col className="text-sm !text-light-gray">
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink href="#" rel="noopener noreferrer">
                 Our Team
               </FooterLink>
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink href="#" rel="noopener noreferrer">
                 Careers
               </FooterLink>
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink href="#" rel="noopener noreferrer">
                 Privacy Policy
               </FooterLink>
-              <FooterLink href="#" target="_blank" rel="noopener noreferrer">
+              <FooterLink href="#" rel="noopener noreferrer">
                 Terms of Service
               </FooterLink>
             </FooterLinkGroup>
@@ -108,7 +127,8 @@ export default function FooterCom() {
 
         <div className="flex gap-x-5">
           <a
-            href="#"
+            href="https://www.instagram.com/enessozdemir/"
+            target="_blank"
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
@@ -118,7 +138,8 @@ export default function FooterCom() {
             <PiInstagramLogo />
           </a>
           <a
-            href="#"
+            href="https://x.com/"
+            target="_blank"
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
@@ -128,7 +149,8 @@ export default function FooterCom() {
             <PiXLogo />
           </a>
           <a
-            href="#"
+            href="https://github.com/enessozdemir"
+            target="_blank"
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
@@ -138,7 +160,8 @@ export default function FooterCom() {
             <PiGithubLogo />
           </a>
           <a
-            href="#"
+            href="https://www.linkedin.com/in/enessozdemir/"
+            target="_blank"
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"
@@ -148,7 +171,8 @@ export default function FooterCom() {
             <PiLinkedinLogo />
           </a>
           <a
-            href="#"
+            href="https://discord.com/"
+            target="_blank"
             className={`${
               theme === "light"
                 ? "hover:text-primary-color"

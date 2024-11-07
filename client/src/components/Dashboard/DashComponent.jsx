@@ -216,14 +216,14 @@ export default function DashComponent() {
           </Table>
         </div>
 
-        <div className="flex flex-col w-full md:w-full shadow-md border dark:border-gray-600 p-2 rounded-md dark:bg-gray-800">
+        <div className="flex flex-col w-full shadow-md border dark:border-gray-600 p-2 rounded-md dark:bg-gray-800">
           <div className="flex justify-between p-3 text-sm font-semibold">
             <h1 className="text-center">Recent posts</h1>
             <Button color="light">
               <Link to={"/dashboard?tab=posts"}>See all</Link>
             </Button>
           </div>
-          <Table hoverable>
+          <Table className="hidden sm:block" hoverable>
             <TableHead>
               <TableHeadCell>Update Date</TableHeadCell>
               <TableHeadCell>Post image</TableHeadCell>
@@ -237,6 +237,30 @@ export default function DashComponent() {
                     <Table className="mt-6 ml-6">
                       {new Date(post.updatedAt).toLocaleDateString()}
                     </Table>
+                    <TableCell>
+                      <img
+                        src={post.image}
+                        alt="user"
+                        className="w-14 h-10 rounded-md bg-gray-500"
+                      />
+                    </TableCell>
+                    <TableCell className="w-96">{post.title}</TableCell>
+                    <TableCell className="w-5">{post.category}</TableCell>
+                  </TableRow>
+                </TableBody>
+              ))}
+          </Table>
+
+          <Table className="block sm:hidden w-full" hoverable>
+            <TableHead>
+              <TableHeadCell>Post image</TableHeadCell>
+              <TableHeadCell>Post Title</TableHeadCell>
+              <TableHeadCell>Category</TableHeadCell>
+            </TableHead>
+            {posts &&
+              posts.map((post) => (
+                <TableBody key={post._id} className="divide-y">
+                  <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
                     <TableCell>
                       <img
                         src={post.image}

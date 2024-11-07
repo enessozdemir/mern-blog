@@ -105,10 +105,7 @@ export default function PostPage() {
         <div>
           <div>
             <p className="text-sm text-gray-400 font-bold">
-              {author.username} •{" "}
-              <span className="text-green-400 hover:underline cursor-pointer">
-                Follow
-              </span>
+              {author.username}
             </p>
           </div>
           <div>
@@ -154,9 +151,9 @@ export default function PostPage() {
       <CommentSection postId={post && post._id} />
 
       <div className="mt-20">
-        <h1 className="">
-          More from <span className="text-gray-400">@{author.username}</span>
-        </h1>
+        <h3 className="">
+          More Posts
+        </h3>
         <div className="flex flex-wrap gap-5 justify-center">
           {recentPosts &&
             recentPosts.map((post) => (

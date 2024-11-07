@@ -13,14 +13,13 @@ import {
 } from "flowbite-react";
 import { Link, useLocation } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
-import { PiMoon, PiSun } from "react-icons/pi";
+import { PiMoon, PiNotePencilLight, PiSun } from "react-icons/pi";
 import { FiUser, FiLogOut } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleTheme } from "../redux/theme/themeSlice";
 import { signOutSuccess } from "../redux/user/userSlice";
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const { currentUser } = useSelector((state) => state.user);
@@ -63,16 +62,16 @@ export default function Header() {
 
   return (
     <Navbar className="border-b-2 px-5">
-      <Link
-        to="/home"
-        className={`${
-          theme === "light" ? "text-primary-color" : "text-soft-white"
-        } self-center whitespace-nowrap text-2xl sm:text-3xl font-airone`}
-      >
-        Blog.
-      </Link>
+      <div className="flex gap-5">
+        <Link
+          to="/home"
+          className={`${
+            theme === "light" ? "text-primary-color" : "text-soft-white"
+          } self-center whitespace-nowrap text-2xl sm:text-3xl font-airone`}
+        >
+          Blog.
+        </Link>
 
-      <div className="flex gap-10 md:order-2">
         <form onSubmit={handleSubmit}>
           <TextInput
             type="text"
@@ -83,25 +82,36 @@ export default function Header() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </form>
+      </div>
 
-        <div className="flex gap-1 items-center">
+      <div className="flex gap-10 md:order-2">
+        <div className="flex sm:gap-5 gap-2 items-center">
+          <button className="hidden sm:block">
+            <Link
+              className="flex items-center gap-1 text-primary-color dark:text-soft-white font-extralight sm:text-sm text-xs !text-opacity-80"
+              to="/create-post"
+            >
+              <PiNotePencilLight size={27} /> <span>Write</span>
+            </Link>
+          </button>
+
           <Button
-            className={`${isOpen ? "w-32" : "w-12"} h-10 lg:hidden`}
+            className="w-12 h-10 sm:hidden focus:ring-0"
             color="gray"
             pill
-            onClick={() => setIsOpen(!isOpen)}
           >
-            {/* {isOpen ? <TextInput placeholder="Search" className="" /> : null} */}
-            <AiOutlineSearch size={20} />
+            <Link to="/search">
+              <AiOutlineSearch size={20} />
+            </Link>
           </Button>
 
           <Button
-            className="w-12 h-10 p-1 focus:ring-0"
+            className="w-12 h-10   focus:ring-0"
             color="gray"
             pill
             onClick={() => dispatch(toggleTheme())}
           >
-            {theme === "light" ? <PiMoon /> : <PiSun />}
+            {theme === "light" ? <PiMoon size={17} /> : <PiSun size={17} />}
           </Button>
           {currentUser ? (
             <Dropdown
@@ -111,6 +121,9 @@ export default function Header() {
                 <Avatar alt="user" img={currentUser.profilePicture} rounded />
               }
             >
+              <Link className="block sm:hidden" to={"/create-post"}>
+                <DropdownItem icon={PiNotePencilLight}>Write</DropdownItem>
+              </Link>
               <Link to={"/dashboard?tab=profile"}>
                 <DropdownItem icon={FiUser}>Profile</DropdownItem>
               </Link>

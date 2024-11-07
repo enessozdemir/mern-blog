@@ -5,7 +5,7 @@ import { FiCamera } from "react-icons/fi";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
-  const [activeTab, setActiveTab] = useState("ForYou");
+  const [activeTab, setActiveTab] = useState("");
   const navigate = useNavigate();
 
   const getPreviewContent = (content) => {
@@ -47,6 +47,28 @@ export default function Home() {
     }
   };
 
+  const handleGetPostsByCategory = async (category) => {
+    try {
+      const response = await fetch(
+        `/api/post/posts?${category === "" ? null : `category=${category}`}`
+      );
+      const data = await response.json();
+
+      if (response.ok) {
+        const postsWithAuthors = await Promise.all(
+          data.posts.map(async (post) => {
+            const author = await getAuthor(post.userId);
+            return { ...post, author };
+          })
+        );
+        setPosts(postsWithAuthors);
+        setActiveTab(category);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     getPosts();
   }, []);
@@ -59,46 +81,46 @@ export default function Home() {
         <div className="flex gap-9 text-sm text-gray-500 dark:text-silver border-b dark:border-gray-600">
           <p
             className={`pb-5 ${
-              activeTab === "ForYou" &&
+              activeTab === "" &&
               "text-black dark:text-soft-white border-b border-black dark:border-white"
             } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
-            onClick={() => setActiveTab("ForYou")}
+            onClick={() => handleGetPostsByCategory("")}
           >
             For you
           </p>
           <p
             className={`pb-5 ${
-              activeTab === "Technology" &&
+              activeTab === "technology" &&
               "text-black dark:text-soft-white border-b border-black dark:border-white"
             } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
-            onClick={() => setActiveTab("Technology")}
+            onClick={() => handleGetPostsByCategory("technology")}
           >
             Technology
           </p>
           <p
             className={`pb-5 ${
-              activeTab === "Business" &&
+              activeTab === "business" &&
               "text-black dark:text-soft-white border-b border-black dark:border-white"
             } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
-            onClick={() => setActiveTab("Business")}
+            onClick={() => handleGetPostsByCategory("business")}
           >
             Business
           </p>
           <p
             className={`pb-5 ${
-              activeTab === "Travel" &&
+              activeTab === "travel" &&
               "text-black dark:text-soft-white border-b border-black dark:border-white"
             } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
-            onClick={() => setActiveTab("Travel")}
+            onClick={() => handleGetPostsByCategory("travel")}
           >
             Travel
           </p>
           <p
             className={`pb-5 ${
-              activeTab === "Other" &&
+              activeTab === "other" &&
               "text-black dark:text-soft-white border-b border-black dark:border-white"
             } cursor-pointer transition-all ease-out duration-75 hover:text-black dark:hover:text-soft-white`}
-            onClick={() => setActiveTab("Other")}
+            onClick={() => handleGetPostsByCategory("other")}
           >
             Other
           </p>
@@ -128,15 +150,39 @@ export default function Home() {
                     <FiCamera size={85} />
                   </div>
                 )}
-                <div className="flex gap-2 items-center px-3 mt-5">
-                  <img
-                    src={post.author?.profilePicture || ""}
-                    alt=""
-                    className="w-8 h-8 rounded-full object-cover"
-                  />
-                  <p className="text-sm text-gray-500 font-bold">
-                    @{post.author?.username || "unknown"}
-                  </p>
+                <div className="flex justify-between items-center">
+                  <div className="flex gap-2 items-center px-3 mt-5">
+                    <img
+                      src={post.author?.profilePicture || ""}
+                      alt=""
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    <p className="text-sm text-gray-500 font-bold">
+                      @{post.author?.username || "unknown"}
+                    </p>
+                  </div>
+                  <div className="text-gray-500 text-sm px-4 mt-4">
+                    <p>
+                      {(() => {
+                        const postDate = new Date(post.createdAt);
+                        const currentDate = new Date();
+                        if (
+                          postDate.getFullYear() === currentDate.getFullYear()
+                        ) {
+                          return postDate.toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                          });
+                        } else {
+                          return postDate.toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          });
+                        }
+                      })()}
+                    </p>
+                  </div>
                 </div>
               </div>
 

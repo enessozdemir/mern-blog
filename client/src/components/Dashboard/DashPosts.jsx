@@ -19,7 +19,6 @@ import { Link } from "react-router-dom";
 
 export default function DashPosts() {
   const [posts, setPosts] = useState([]);
-  const [showMore, setShowMore] = useState(true);
   const [dropdown, setDropdown] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const [showModal, setShowModal] = useState(false);
@@ -33,29 +32,9 @@ export default function DashPosts() {
       const data = await response.json();
       if (response.ok) {
         setPosts(data.posts);
-        if (data.posts.length < 9) {
-          setShowMore(false);
-        }
       }
     } catch (error) {
       console.log(error);
-    }
-  };
-
-  const handleShowMore = async () => {
-    try {
-      const response = await fetch(
-        `/api/post/posts/?userId=${currentUser._id}&startIndex=${posts.length}`
-      );
-      const data = await response.json();
-      if (response.ok) {
-        setPosts([...posts, ...data.posts]);
-        if (data.posts.length < 9) {
-          setShowMore(false);
-        }
-      }
-    } catch (error) {
-      console.error(error);
     }
   };
 
@@ -174,15 +153,6 @@ export default function DashPosts() {
                 </TableBody>
               ))}
             </Table>
-
-            {showMore && (
-              <button
-                className="block mx-auto my-5 text-teal-400"
-                onClick={handleShowMore}
-              >
-                Show More
-              </button>
-            )}
           </>
         ) : (
           <p>You have no posts yet!</p>

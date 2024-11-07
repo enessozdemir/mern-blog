@@ -116,36 +116,41 @@ export default function SearchPage() {
         <h1 className="text-gray-400 sm:text-4xl text-3xl font-semibold">
           Results for{" "}
           <span className="text-primary-color dark:text-soft-white">
-            {searchData.searchTerm}
+            {searchData.searchTerm || "..."}
           </span>
         </h1>
-        <form onSubmit={handleSubmit} className="flex gap-3">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col sm:flex-row gap-3"
+        >
           <TextInput
             id="searchTerm"
-            placeholder="Search"
+            placeholder="Type to search"
             type="text"
             value={searchData.searchTerm}
             onChange={handleChange}
           />
-          <Select id="sort" value={searchData.sort} onChange={handleChange}>
-            <option value="desc">Newest</option>
-            <option value="asc">Oldest</option>
-          </Select>
-          <Select
-            id="category"
-            value={searchData.category}
-            onChange={handleChange}
-          >
-            <option value="uncategorized">Select a Category</option>
-            <option value="technology">Technology</option>
-            <option value="business">Business</option>
-            <option value="travel">Travel</option>
-            <option value="other">Other</option>
-          </Select>
+          <div className="flex sm:gap-3 sm:justify-normal justify-between">
+            <Select id="sort" value={searchData.sort} onChange={handleChange}>
+              <option value="desc">Newest</option>
+              <option value="asc">Oldest</option>
+            </Select>
+            <Select
+              id="category"
+              value={searchData.category}
+              onChange={handleChange}
+            >
+              <option value="uncategorized">Select a Category</option>
+              <option value="technology">Technology</option>
+              <option value="business">Business</option>
+              <option value="travel">Travel</option>
+              <option value="other">Other</option>
+            </Select>
 
-          <Button color="light" type="submit">
-            Search
-          </Button>
+            <Button color="light" type="submit">
+              Search
+            </Button>
+          </div>
         </form>
       </div>
 
@@ -158,7 +163,7 @@ export default function SearchPage() {
         {!loading &&
           posts &&
           posts.map((post) => (
-            <div className="w-[32.8%]">
+            <div className="sm:w-[32.8%] w-full">
               <PostCard key={post._id} post={post} />
             </div>
           ))}
