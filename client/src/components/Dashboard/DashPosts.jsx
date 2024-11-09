@@ -61,7 +61,6 @@ export default function DashPosts() {
   useEffect(() => {
     if (currentUser.isAdmin) {
       handlePosts();
-      console.log(posts);
     }
   }, [currentUser._id]);
 

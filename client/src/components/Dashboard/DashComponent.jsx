@@ -58,7 +58,7 @@ export default function DashComponent() {
 
     const getComments = async () => {
       try {
-        const response = await fetch("/api/comment/getCommentsByUser?limit=5");
+        const response = await fetch("/api/comment/getCommentsByUser?sort=desc&limit=6");
         const data = await response.json();
         if (response.ok) {
           setComments(data.comments);
@@ -160,7 +160,7 @@ export default function DashComponent() {
       </div>
 
       <div className="flex flex-wrap gap-4 py-3 px-5 sm:px-16">
-        <div className="flex flex-col w-full md:w-[68%] shadow-md p-2 rounded-md dark:bg-gray-800 border dark:border-gray-600">
+        <div className="flex flex-col w-full md:w-[66%] shadow-md p-2 rounded-md dark:bg-gray-800 border dark:border-gray-600">
           <div className="flex justify-between  p-3 text-sm font-semibold">
             <h1 className="text-center p-2">Recent comments</h1>
             <Button color="light">
@@ -176,7 +176,7 @@ export default function DashComponent() {
               comments.map((comment) => (
                 <TableBody key={comment._id} className="divide-y">
                   <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                    <TableCell className="w-96">
+                    <TableCell>
                       <p className="line-clamp-2">{comment.content}</p>
                     </TableCell>
                     <TableCell>{comment.numberOfLikes}</TableCell>
@@ -186,7 +186,7 @@ export default function DashComponent() {
           </Table>
         </div>
 
-        <div className="flex flex-col w-full md:w-[30.2%] shadow-md p-2 rounded-md dark:bg-gray-800 border dark:border-gray-600">
+        <div className="flex flex-col w-full md:w-[32%] shadow-md p-2 rounded-md dark:bg-gray-800 border dark:border-gray-600">
           <div className="flex justify-between  p-3 text-sm font-semibold">
             <h1 className="text-center p-2">Recent users</h1>
             <Button color="light">
@@ -244,8 +244,8 @@ export default function DashComponent() {
                         className="w-14 h-10 rounded-md bg-gray-500"
                       />
                     </TableCell>
-                    <TableCell className="w-96">{post.title}</TableCell>
-                    <TableCell className="w-5">{post.category}</TableCell>
+                    <TableCell>{post.title}</TableCell>
+                    <TableCell>{post.category}</TableCell>
                   </TableRow>
                 </TableBody>
               ))}

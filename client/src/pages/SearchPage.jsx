@@ -30,6 +30,19 @@ export default function SearchPage() {
       });
     }
 
+    const getAuthor = async (userId) => {
+      try {
+        const response = await fetch(`/api/user/author/${userId}`);
+        if (!response.ok) {
+          console.log("Author not found");
+        }
+        return await response.json();
+      } catch (error) {
+        console.log(error.message);
+        return null;
+      }
+    };
+
     const getPosts = async () => {
       setLoading(true);
       const searchQuery = urlParams.toString();
@@ -43,7 +56,13 @@ export default function SearchPage() {
 
         if (response.ok) {
           const data = await response.json();
-          setPosts(data.posts);
+          const postsWithAuthors = await Promise.all(
+            data.posts.map(async (post) => {
+              const author = await getAuthor(post.userId);
+              return { ...post, author };
+            })
+          );
+          setPosts(postsWithAuthors);
           setLoading(false);
           if (data.posts.length > 9) {
             setShowMore(true);
@@ -107,8 +126,6 @@ export default function SearchPage() {
       console.log(error.message);
     }
   };
-
-  console.log(searchData);
 
   return (
     <div className="min-h-screen container mx-auto sm:px-0 px-5 py-10 pb-20">

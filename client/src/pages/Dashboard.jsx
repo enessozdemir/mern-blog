@@ -18,8 +18,6 @@ export default function Dashboard() {
     }
   }, [location.search]);
 
-  console.log(location.pathname);
-
   return (
     <div className="min-h-screen flex flex-col md:flex-row border-b border-lighter-icon-color border-opacity-10">
       {/* Sidebar */}

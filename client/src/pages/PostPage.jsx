@@ -11,26 +11,46 @@ export default function PostPage() {
   // eslint-disable-next-line no-unused-vars
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
-  const [authorId, setAuthorId] = useState("");
-  const [author, setAuthor] = useState({});
   const [recentPosts, setRecentPosts] = useState(null);
 
-  const fetchPost = async () => {
+  const getAuthor = async (userId) => {
+    try {
+      const response = await fetch(`/api/user/author/${userId}`);
+      if (!response.ok) {
+        console.log("Author not found");
+      }
+      return await response.json();
+    } catch (error) {
+      console.log(error.message);
+      return null;
+    }
+  };
+
+  const getPost = async () => {
     try {
       setLoading(true);
       const response = await fetch(`/api/post/posts?slug=${postSlug}`);
       const data = await response.json();
+
       if (!response.ok) {
         setError(true);
         setLoading(false);
+        return;
       }
 
-      if (response.ok) {
-        setPost(data.posts[0]);
-        setAuthorId(data.posts[0].userId);
-        setLoading(false);
+      if (data.posts && data.posts.length > 0) {
+        const post = data.posts[0];
+        const author = await getAuthor(post.userId);
+        const postWithAuthor = { ...post, author };
+
+        setPost(postWithAuthor);
         setError(false);
+      } else {
+        console.log("No posts found");
+        setError(true);
       }
+
+      setLoading(false);
     } catch (error) {
       console.log(error);
       setError(true);
@@ -38,33 +58,18 @@ export default function PostPage() {
     }
   };
 
-  const handleAuthor = async () => {
-    try {
-      const response = await fetch(`/api/user/author/${authorId}`);
-      const data = await response.json();
-      if (!response.ok) {
-        setError(true);
-        setLoading(false);
-      }
-
-      if (response.ok) {
-        setAuthor(data);
-        setLoading(false);
-        setError(false);
-      }
-    } catch (error) {
-      console.log(error);
-      setError(true);
-      setLoading(false);
-    }
-  };
-
-  const fetchRecentPosts = async () => {
+  const getRecentPosts = async () => {
     try {
       const response = await fetch("/api/post/posts?limit=4");
       const data = await response.json();
       if (response.ok) {
-        setRecentPosts(data.posts);
+        const postsWithAuthors = await Promise.all(
+          data.posts.map(async (post) => {
+            const author = await getAuthor(post.userId);
+            return { ...post, author };
+          })
+        );
+        setRecentPosts(postsWithAuthors);
       }
     } catch (error) {
       console.log(error);
@@ -72,15 +77,11 @@ export default function PostPage() {
   };
 
   useEffect(() => {
-    fetchPost();
+    getPost();
   }, [postSlug]);
 
   useEffect(() => {
-    handleAuthor();
-  }, [authorId]);
-
-  useEffect(() => {
-    fetchRecentPosts();
+    getRecentPosts();
   }, []);
 
   if (loading)
@@ -98,14 +99,14 @@ export default function PostPage() {
       {/* author */}
       <div className="flex gap-5 mt-10">
         <img
-          src={author.profilePicture}
+          src={post.author?.profilePicture}
           alt=""
           className="w-12 h-12 rounded-full object-cover"
         />
         <div>
           <div>
             <p className="text-sm text-gray-400 font-bold">
-              {author.username}
+              {post.author?.username}
             </p>
           </div>
           <div>
@@ -150,14 +151,13 @@ export default function PostPage() {
       {/* post comments */}
       <CommentSection postId={post && post._id} />
 
+      {/* more posts */}
       <div className="mt-20">
-        <h3 className="">
-          More Posts
-        </h3>
-        <div className="flex flex-wrap gap-5 justify-center">
+        <h3 className="">More Posts</h3>
+        <div className="flex flex-wrap gap-5">
           {recentPosts &&
             recentPosts.map((post) => (
-              <div key={post._id} className="sm:w-[48%] w-[90%]">
+              <div key={post._id} className="sm:w-[48%] w-full">
                 <PostCard post={post} />
               </div>
             ))}

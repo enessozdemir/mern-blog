@@ -46,7 +46,6 @@ export default function CommentSection({ postId }) {
         setComment("");
         setCommentError(null);
         setComments([data.data, ...comments]);
-        console.log(data.message);
       }
     } catch (error) {
       setCommentError(error.message);

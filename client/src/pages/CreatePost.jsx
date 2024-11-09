@@ -31,23 +31,6 @@ export default function CreatePost() {
 
   const imagePickerRef = useRef();
 
-  // const handleContentChange = (content) => {
-  //   setFormData({ ...formData, content });
-  // };
-
-  // const handleChange = (e) => {
-  //   setFormData({ ...formData, [e.target.id]: e.target.value });
-  //   console.log(formData);
-  // };
-
-  // const handleImageChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file && file.type.startsWith("image/")) {
-  //     const image = URL.createObjectURL(file);
-  //     setFormData({ ...formData, image: image });
-  //   }
-  // };
-
   const getPreviewContent = (content) => {
     const plainText = content.replace(/<[^>]*>/g, "");
     return plainText.length > 330
@@ -118,7 +101,7 @@ export default function CreatePost() {
       setCreateError(error, "Something went wrong!");
     }
   };
-  console.log(formData);
+
   return (
     <div className="w-full container mx-auto flex flex-col sm:flex-row gap-x-2 justify-between px-5 py-10 mb-20 sm:px-0">
       {/* new post */}
