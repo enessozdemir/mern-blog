@@ -15,55 +15,80 @@ import { PiEqualsThin, PiXThin } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import DashSidebar from "./DashSidebar";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useRef } from "react";
 
-export default function DashComments() {
+export default function DashAllComments() {
   const { currentUser } = useSelector((state) => state.user);
   const [comments, setComments] = useState([]);
   const [showMore, setShowMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [dropdown, setDropdown] = useState(false);
   const [commentIdToDelete, setCommentIdToDelete] = useState("");
+  const location = useLocation();
+  const hasFetched = useRef(false);
 
   useEffect(() => {
-    setComments([]);
-    const getUserPostsComments = async () => {
+    const getAllComments = async () => {
       try {
-        const response = await fetch(
-          `/api/post/posts/?userId=${currentUser._id}`
-        );
-
+        const response = await fetch("/api/comment/all-comments?sort=desc");
         if (response.ok) {
-          const data = await response.json();
-          const posts = data.posts;
+          const commentData = await response.json();
+          const uniquePostIds = [
+            ...new Set(commentData.comments.map((comment) => comment.postId)),
+          ];
 
-          for (let post of posts) {
-            const response = await fetch(`/api/comment/comments/${post._id}`);
-            const commentData = await response.json();
+          const postResponses = await Promise.all(
+            uniquePostIds.map((id) => fetch(`/api/post/${id}`))
+          );
 
-            if (response.ok) {
-              const commentsWithAuthorsAndPosts = await Promise.all(
-                commentData.data.map(async (comment) => {
-                  const userResponse = await fetch(
-                    `/api/user/${comment.userId}`
-                  );
-                  const userData = await userResponse.json();
-                  return {
-                    ...comment,
-                    author: userResponse.ok ? userData : null,
-                    post: post,
-                  };
-                })
-              );
-              setComments((prev) => [...prev, ...commentsWithAuthorsAndPosts]);
-            }
-          }
+          const posts = await Promise.all(
+            postResponses.map((response) =>
+              response.ok ? response.json() : null
+            )
+          );
+
+          const postsById = posts.reduce((acc, post) => {
+            if (post) acc[post._id] = post;
+            return acc;
+          }, {});
+
+          const uniqueUserIds = [
+            ...new Set(commentData.comments.map((comment) => comment.userId)),
+          ];
+
+          const userResponses = await Promise.all(
+            uniqueUserIds.map((id) => fetch(`/api/user/${id}`))
+          );
+
+          const users = await Promise.all(
+            userResponses.map((response) =>
+              response.ok ? response.json() : null
+            )
+          );
+
+          const usersById = users.reduce((acc, user) => {
+            if (user) acc[user._id] = user;
+            return acc;
+          }, {});
+
+          setComments(
+            commentData.comments.map((comment) => ({
+              ...comment,
+              author: usersById[comment.userId],
+              post: postsById[comment.postId],
+            }))
+          );
         }
       } catch (error) {
         console.log(error);
       }
     };
 
-    getUserPostsComments();
+    if (!hasFetched.current) {
+      getAllComments();
+      hasFetched.current = true;
+    }
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
@@ -91,14 +116,11 @@ export default function DashComments() {
           method: "DELETE",
         }
       );
-      const data = await res.json();
       if (res.ok) {
         setComments((prev) =>
           prev.filter((comment) => comment._id !== commentIdToDelete)
         );
         setShowModal(false);
-      } else {
-        console.log(data.message);
       }
     } catch (error) {
       console.log(error.message);
@@ -132,6 +154,43 @@ export default function DashComments() {
       </div>
 
       <div className="overflow-scroll px-5 sm:px-16 mb-10">
+        <div className="flex gap-3 pb-5">
+          <Link to="/dashboard?tab=comments">
+            <Button
+              className={`focus:ring-0 border text-primary-color dark:text-soft-white ${
+                location.search === "?tab=comments"
+                  ? "border-red-600"
+                  : "border-gray-600 hover:opacity-80"
+              }`}
+            >
+              My Posts Comments
+            </Button>
+          </Link>
+          <Link to="/dashboard?tab=my-comments">
+            <Button
+              className={`focus:ring-0 border text-primary-color dark:text-soft-white ${
+                location.search === "?tab=my-comments"
+                  ? "border-red-600"
+                  : "border-gray-600 hover:opacity-80"
+              }`}
+            >
+              My Comments
+            </Button>
+          </Link>
+          {currentUser.isAdmin && (
+            <Link to="/dashboard?tab=all-comments">
+              <Button
+                className={`focus:ring-0 border text-primary-color dark:text-soft-white ${
+                  location.search === "?tab=all-comments"
+                    ? "border-red-600"
+                    : "border-gray-600 hover:opacity-80"
+                }`}
+              >
+                All Comments
+              </Button>
+            </Link>
+          )}
+        </div>
         {comments.length > 0 ? (
           <>
             <Table hoverable className="shadow-sm">
@@ -155,13 +214,13 @@ export default function DashComments() {
                     </TableCell>
                     <TableCell>
                       <Link to={`/post/${comment.post.slug}`}>
-                        <div className="flex gap-2 items-center">
+                        <div className="flex flex-col sm:flex-row gap-2 items-center">
                           <img
                             className="hidden sm:block w-16 h-12"
                             src={comment.post?.image}
                             alt=""
-                          />{" "}
-                          <p className="text-sm">{comment.post?.title}</p>
+                          />
+                          <p>{comment.post?.title}</p>
                         </div>
                       </Link>
                     </TableCell>
@@ -171,7 +230,7 @@ export default function DashComments() {
                           className="w-8 h-8 rounded-full"
                           src={comment.author?.profilePicture}
                           alt=""
-                        />{" "}
+                        />
                         <p>{comment.author?.username}</p>
                       </div>
                     </TableCell>

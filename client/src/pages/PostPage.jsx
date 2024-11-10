@@ -99,14 +99,14 @@ export default function PostPage() {
       {/* author */}
       <div className="flex gap-5 mt-10">
         <img
-          src={post.author?.profilePicture}
+          src={post?.author?.profilePicture}
           alt=""
           className="w-12 h-12 rounded-full object-cover"
         />
         <div>
           <div>
             <p className="text-sm text-gray-400 font-bold">
-              {post.author?.username}
+              {post?.author?.username}
             </p>
           </div>
           <div>

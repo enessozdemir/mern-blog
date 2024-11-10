@@ -25,9 +25,7 @@ export const createComment = async (req, res, next) => {
 
 export const getComments = async (req, res, next) => {
     try {
-        const comments = await Comment.find({ postId: req.params.postId }).sort({
-            createdAt: -1,
-        });
+        const comments = await Comment.find({ postId: req.params.postId }).sort({ createdAt: -1 })
         res.status(200).json({ data: comments });
     } catch (error) {
         return next(error);
@@ -74,6 +72,29 @@ export const deleteComment = async (req, res, next) => {
 };
 
 export const getCommentsByUser = async (req, res, next) => {
+    const userId = req.params.userId;
+    if (userId !== req.user.id) {
+        return next(errorHandler(401, 'You are not allowed to view comments from other users'));
+    }
+    try {
+        const startIndex = parseInt(req.query.startIndex) || 0;
+        const limit = parseInt(req.query.limit) || 9;
+        const sortDirection = req.query.sort === "desc" ? -1 : 1;
+        const comments = await Comment.find({ userId })
+            .sort({ createdAt: sortDirection })
+            .skip(startIndex)
+            .limit(limit);
+        const totalComments = await Comment.countDocuments();
+        const now = new Date();
+        const oneMonthAgo = new Date(now.setMonth(now.getMonth() - 1));
+        const lastMonthComments = await Comment.countDocuments({ createdAt: { $gte: oneMonthAgo } });
+        res.status(200).json({ comments, totalComments, lastMonthComments });
+    } catch (error) {
+        return next(error);
+    }
+};
+
+export const getAllComments = async (req, res, next) => {
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
         const limit = parseInt(req.query.limit) || 9;

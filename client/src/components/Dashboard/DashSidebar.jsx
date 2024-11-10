@@ -98,7 +98,7 @@ export default function DashSidebar() {
 
           <Link to="/dashboard?tab=comments">
             <SidebarItem
-              active={tab === "comments"}
+              active={tab === "comments" || "my-comments"}
               icon={FiMessageSquare}
               as="div"
             >

@@ -4,8 +4,10 @@ import DashSidebar from "../components/Dashboard/DashSidebar";
 import DashProfile from "../components/Dashboard/DashProfile";
 import DashPosts from "../components/Dashboard/DashPosts";
 import DashUsers from "../components/Dashboard/DashUsers";
-import DashComments from "../components/Dashboard/DashComments";
 import DashComponent from "../components/Dashboard/DashComponent";
+import DashUserPostsComments from "../components/Dashboard/DashUserPostsComments";
+import DashMyComments from "../components/Dashboard/DashMyComments";
+import DashAllComments from "../components/Dashboard/DashAllComments";
 
 export default function Dashboard() {
   const location = useLocation();
@@ -39,7 +41,13 @@ export default function Dashboard() {
       {tab === "users" && <DashUsers />}
 
       {/* Comments */}
-      {tab === "comments" && <DashComments />}
+      {tab === "comments" && <DashUserPostsComments />}
+
+      {/* My Comments */}
+      {tab === "my-comments" && <DashMyComments />}
+
+      {/* All Comments */}
+      {tab === "all-comments" && <DashAllComments />}
     </div>
   );
 }
