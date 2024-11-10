@@ -120,14 +120,22 @@ export default function CommentSection({ postId }) {
       <h2 className="mt-20 text-xl font-bold">
         Comments ({comments.length || 0})
       </h2>
-      <form className="border shadow-lg mt-5 p-5" onSubmit={handleSubmit}>
+      <form
+        className="border dark:border-gray-600 shadow-lg mt-5 p-5"
+        onSubmit={handleSubmit}
+      >
         <div className="flex flex-col">
           <Textarea
             id="comment"
             className="!bg-white dark:!bg-primary-color !border-none !focus:outline-none !ring-0 !focus:ring-0 resize-none"
-            rows={isOpen ? 7 : 1}
+            rows={currentUser && isOpen ? 7 : 1}
             maxLength={280}
-            placeholder="What are your thoughts?"
+            placeholder={`${
+              currentUser
+                ? "What are your thoughts?"
+                : "What are your thoughts? Please login to write or like a comment!"
+            }`}
+            disabled={!currentUser}
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             onClick={() => setIsOpen(true)}
@@ -138,7 +146,7 @@ export default function CommentSection({ postId }) {
               isOpen
                 ? "max-h-screen opacity-100"
                 : "max-h-0 opacity-0 pointer-events-none"
-            }`}
+            } ${currentUser ? "block" : "hidden"} `}
           >
             <span className="transition-all duration-500 ease-in-out text-xs text-end pr-4 text-gray-500">
               {comment.length} / 280
@@ -147,10 +155,10 @@ export default function CommentSection({ postId }) {
               <div className="flex items-center gap-2">
                 <img
                   className="w-8 h-8 rounded-full"
-                  src={currentUser.profilePicture}
-                  alt={currentUser.username}
+                  src={currentUser?.profilePicture}
+                  alt={currentUser?.username}
                 />
-                <p className="text-light-gray">{currentUser.username}</p>
+                <p className="text-light-gray">{currentUser?.username}</p>
               </div>
               <div className="flex">
                 <Button

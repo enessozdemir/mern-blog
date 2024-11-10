@@ -43,26 +43,27 @@ export default function Comment({ comment, onLike, onDelete }) {
               {moment(comment.createdAt).fromNow()}
             </span>
           </div>
-          <Dropdown
-            arrowIcon={false}
-            label={<PiDotsThreeOutlineFill alt="dropdown" />}
-            inline
-          >
-            {currentUser.isAdmin || currentUser._id === comment.userId ? (
+          {currentUser?.isAdmin || currentUser?._id === comment.userId ? (
+            <Dropdown
+              arrowIcon={false}
+              label={<PiDotsThreeOutlineFill alt="dropdown" />}
+              inline
+            >
               <DropdownItem
                 className="text-xs"
                 onClick={() => onDelete(comment._id)}
               >
                 Delete
               </DropdownItem>
-            ) : null}
-          </Dropdown>
+            </Dropdown>
+          ) : null}
         </div>
         <p className=" mb-2 text-sm">{comment.content}</p>
         <div className="flex items-center text-gray-500 gap-0.5 mt-5">
           <button
+            disabled={!currentUser}
             type="button"
-            className={`text-md hover:text-blue-600 ${
+            className={`text-md ${currentUser && "hover:text-blue-600"} ${
               currentUser &&
               comment.likes.includes(currentUser._id) &&
               "!text-blue-600"
