@@ -89,24 +89,23 @@ export default function DashSidebar() {
               Profile
             </SidebarItem>
           </Link>
-          {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=posts">
-              <SidebarItem active={tab === "posts"} icon={FiFile} as="div">
-                Posts
-              </SidebarItem>
-            </Link>
-          )}
-          {currentUser.isAdmin && (
-            <Link to="/dashboard?tab=comments">
-              <SidebarItem
-                active={tab === "comments"}
-                icon={FiMessageSquare}
-                as="div"
-              >
-                Comments
-              </SidebarItem>
-            </Link>
-          )}
+
+          <Link to="/dashboard?tab=posts">
+            <SidebarItem active={tab === "posts"} icon={FiFile} as="div">
+              Posts
+            </SidebarItem>
+          </Link>
+
+          <Link to="/dashboard?tab=comments">
+            <SidebarItem
+              active={tab === "comments"}
+              icon={FiMessageSquare}
+              as="div"
+            >
+              Comments
+            </SidebarItem>
+          </Link>
+
           {currentUser.isAdmin && (
             <Link to="/dashboard?tab=users">
               <SidebarItem active={tab === "users"} icon={FiUsers} as="div">

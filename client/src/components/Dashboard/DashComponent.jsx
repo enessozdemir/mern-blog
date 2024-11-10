@@ -58,7 +58,9 @@ export default function DashComponent() {
 
     const getComments = async () => {
       try {
-        const response = await fetch("/api/comment/getCommentsByUser?sort=desc&limit=6");
+        const response = await fetch(
+          "/api/comment/getCommentsByUser?sort=desc&limit=6"
+        );
         const data = await response.json();
         if (response.ok) {
           setComments(data.comments);

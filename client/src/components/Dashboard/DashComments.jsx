@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Modal,
   Table,
@@ -15,32 +14,56 @@ import { useEffect, useState } from "react";
 import { PiEqualsThin, PiXThin } from "react-icons/pi";
 import { useSelector } from "react-redux";
 import DashSidebar from "./DashSidebar";
+import { Link } from "react-router-dom";
 
 export default function DashComments() {
   const { currentUser } = useSelector((state) => state.user);
   const [comments, setComments] = useState([]);
-  const [showMore, setShowMore] = useState(true);
+  const [showMore, setShowMore] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [dropdown, setDropdown] = useState(false);
   const [commentIdToDelete, setCommentIdToDelete] = useState("");
+
   useEffect(() => {
-    const fetchComments = async () => {
+    setComments([]);
+    const getUserPostsComments = async () => {
       try {
-        const res = await fetch(`/api/comment/getCommentsByUser`);
-        const data = await res.json();
-        if (res.ok) {
-          setComments(data.comments);
-          if (data.comments.length < 9) {
-            setShowMore(false);
+        const response = await fetch(
+          `/api/post/posts/?userId=${currentUser._id}`
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const posts = data.posts;
+
+          for (let post of posts) {
+            const response = await fetch(`/api/comment/comments/${post._id}`);
+            const commentData = await response.json();
+
+            if (response.ok) {
+              const commentsWithAuthorsAndPosts = await Promise.all(
+                commentData.data.map(async (comment) => {
+                  const userResponse = await fetch(
+                    `/api/user/${comment.userId}`
+                  );
+                  const userData = await userResponse.json();
+                  return {
+                    ...comment,
+                    author: userResponse.ok ? userData : null,
+                    post: post,
+                  };
+                })
+              );
+              setComments((prev) => [...prev, ...commentsWithAuthorsAndPosts]);
+            }
           }
         }
       } catch (error) {
-        console.log(error.message);
+        console.log(error);
       }
     };
-    if (currentUser.isAdmin) {
-      fetchComments();
-    }
+
+    getUserPostsComments();
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
@@ -109,15 +132,15 @@ export default function DashComments() {
       </div>
 
       <div className="overflow-scroll px-5 sm:px-16 mb-10">
-        {currentUser.isAdmin && comments.length > 0 ? (
+        {comments.length > 0 ? (
           <>
             <Table hoverable className="shadow-sm">
               <TableHead>
                 <TableHeadCell>Date Updated</TableHeadCell>
                 <TableHeadCell>Comment Content</TableHeadCell>
                 <TableHeadCell>Number of likes</TableHeadCell>
-                <TableHeadCell>Post Id</TableHeadCell>
-                <TableHeadCell>User Id</TableHeadCell>
+                <TableHeadCell>Post</TableHeadCell>
+                <TableHeadCell>User</TableHeadCell>
                 <TableHeadCell>Delete</TableHeadCell>
               </TableHead>
               {comments.map((comment) => (
@@ -127,9 +150,31 @@ export default function DashComments() {
                       {new Date(comment.updatedAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell>{comment.content}</TableCell>
-                    <TableCell>{comment.numberOfLikes}</TableCell>
-                    <TableCell>{comment.postId}</TableCell>
-                    <TableCell>{comment.userId}</TableCell>
+                    <TableCell className="text-center">
+                      {comment.numberOfLikes}
+                    </TableCell>
+                    <TableCell>
+                      <Link to={`/post/${comment.post.slug}`}>
+                        <div className="flex gap-2 items-center">
+                          <img
+                            className="hidden sm:block w-16 h-12"
+                            src={comment.post?.image}
+                            alt=""
+                          />{" "}
+                          <p className="text-sm">{comment.post?.title}</p>
+                        </div>
+                      </Link>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col sm:flex-row gap-2 items-center">
+                        <img
+                          className="w-8 h-8 rounded-full"
+                          src={comment.author?.profilePicture}
+                          alt=""
+                        />{" "}
+                        <p>{comment.author?.username}</p>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <span
                         onClick={() => {

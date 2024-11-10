@@ -59,9 +59,7 @@ export default function DashPosts() {
   };
 
   useEffect(() => {
-    if (currentUser.isAdmin) {
-      handlePosts();
-    }
+    handlePosts();
   }, [currentUser._id]);
 
   return (
@@ -91,7 +89,7 @@ export default function DashPosts() {
       </div>
 
       <div className="overflow-scroll w-full px-5 sm:px-16 mb-10">
-        {currentUser.isAdmin && posts.length > 0 ? (
+        {posts.length > 0 ? (
           <>
             {/* web table */}
             <Table hoverable className="shadow-sm">

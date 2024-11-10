@@ -157,7 +157,7 @@ export default function DashProfile() {
 
   return (
     <div className="flex flex-col sm:flex-row w-full">
-      <div className="flex justify-between w-full max-w-5xl px-5 py-5 sm:px-16">
+      <div className="flex justify-between sm:w-[78%] w-full max-w-5xl px-5 py-5 sm:px-16">
         <div className="font-normal flex-1">
           <h1 className="text-2xl">Profile Information</h1>
           {/* photo */}
@@ -381,20 +381,18 @@ export default function DashProfile() {
         </div>
       </div>
 
-      {currentUser.isAdmin && (
-        <Link to={"/create-post"}>
-          <Button
-            type="button"
-            color="success"
-            className="w-[88%] ml-4 sm:ml-0 sm:w-full sm:mt-4"
-          >
-            <div className="flex gap-x-1 items-center">
-              <PiPlusBold className="w-4 h-4" />
-              <p> Create New Post</p>
-            </div>
-          </Button>
-        </Link>
-      )}
+      <Link to={"/create-post"} className="max-h-fit">
+        <Button
+          type="button"
+          color="success"
+          className="w-[88%] ml-4 sm:ml-0 sm:w-full sm:mt-4"
+        >
+          <div className="flex gap-x-1 items-center">
+            <PiPlusBold className="w-4 h-4" />
+            <p> Create New Post</p>
+          </div>
+        </Button>
+      </Link>
     </div>
   );
 }

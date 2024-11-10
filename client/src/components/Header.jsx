@@ -86,7 +86,7 @@ export default function Header() {
 
       <div className="flex gap-10 md:order-2">
         <div className="flex sm:gap-5 gap-2 items-center">
-          <button className="hidden sm:block">
+          <button className={`${currentUser ? "hidden sm:block" : "hidden"} `}>
             <Link
               className="flex items-center gap-1 text-primary-color dark:text-soft-white font-extralight sm:text-sm text-xs !text-opacity-80"
               to="/create-post"
