@@ -33,8 +33,8 @@ export default function DashMyComments() {
         const response = await fetch(
           `/api/comment/getCommentsByUser/${currentUser._id}?sort=desc`
         );
-        const commentData = await response.json();
         if (response.ok) {
+          const commentData = await response.json();
           const commentsWithPosts = await Promise.all(
             commentData.comments.map(async (comment) => {
               const postResponse = await fetch(
@@ -56,8 +56,6 @@ export default function DashMyComments() {
 
     getUserComments();
   }, [currentUser._id]);
-
-  console.log(comments);
 
   const handleShowMore = async () => {
     const startIndex = comments.length;

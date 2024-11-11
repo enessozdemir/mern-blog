@@ -195,7 +195,7 @@ export default function DashUserPostsComments() {
                     </TableCell>
                     <TableCell>
                       <Link to={`/post/${comment.post.slug}`}>
-                        <div className="flex gap-2 items-center">
+                        <div className="flex gap-2">
                           <img
                             className="hidden sm:block w-16 h-12"
                             src={comment.post?.image}
