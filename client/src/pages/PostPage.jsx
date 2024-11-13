@@ -60,7 +60,7 @@ export default function PostPage() {
 
   const getRecentPosts = async () => {
     try {
-      const response = await fetch("/api/post/posts?limit=4");
+      const response = await fetch("/api/post/posts?limit=4&startIndex=1");
       const data = await response.json();
       if (response.ok) {
         const postsWithAuthors = await Promise.all(
