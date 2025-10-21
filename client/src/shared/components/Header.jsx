@@ -16,7 +16,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { PiMoon, PiNotePencilLight, PiSun } from "react-icons/pi";
 import { FiUser, FiLogOut } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleTheme } from "../redux/theme/themeSlice";
+import { toggleTheme } from "../store/themeSlice";
 import { signOutSuccess } from "../redux/user/userSlice";
 
 export default function Header() {

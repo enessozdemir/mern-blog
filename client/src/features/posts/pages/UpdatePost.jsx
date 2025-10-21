@@ -1,35 +1,59 @@
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { FiCamera } from "react-icons/fi";
 import { RiArrowDownWideLine, RiArrowUpWideLine } from "react-icons/ri";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   getDownloadURL,
   getStorage,
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { app } from "../firebase";
+import { app } from "../../app/firebase";
+import { useSelector } from "react-redux";
 
-export default function CreatePost() {
+export default function UpdatePost() {
   const navigate = useNavigate();
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
   const [showPreview, setShowPreview] = useState(true);
-  const [createError, setCreateError] = useState(null);
+  const [updateError, setUpdateError] = useState(null);
   const [formData, setFormData] = useState({
     title: "",
     category: "",
     content: "",
     image: null,
   });
-
+  const { postId } = useParams();
   const imagePickerRef = useRef();
+  const { currentUser } = useSelector((state) => state.user);
+
+  useEffect(() => {
+    try {
+      const fetchPost = async () => {
+        const response = await fetch(`/api/post/posts?postId=${postId}`);
+        const data = await response.json();
+        if (!response.ok) {
+          console.log(data.message);
+          setUpdateError(data.message);
+          return;
+        }
+
+        if (response.ok) {
+          setUpdateError(null);
+          setFormData(data.posts[0]);
+        }
+      };
+      fetchPost();
+    } catch (error) {
+      console.log(error);
+    }
+  }, [postId]);
 
   const getPreviewContent = (content) => {
     const plainText = content.replace(/<[^>]*>/g, "");
@@ -80,25 +104,28 @@ export default function CreatePost() {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/post/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        `/api/post/update/${formData._id}/${currentUser._id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
       const data = await response.json();
 
       if (!response.ok) {
-        setCreateError(data.message);
+        setUpdateError(data.message);
         return;
       }
       if (response.ok) {
-        setCreateError(null);
+        setUpdateError(null);
         navigate(`/post/${data.slug}`);
       }
     } catch (error) {
-      setCreateError(error, "Something went wrong!");
+      setUpdateError(error, "Something went wrong!");
     }
   };
 
@@ -106,7 +133,7 @@ export default function CreatePost() {
     <div className="w-full container mx-auto flex flex-col sm:flex-row gap-x-2 justify-between px-5 py-10 mb-20 sm:px-0">
       {/* new post */}
       <div className="w-full sm:w-2/3">
-        <h1 className="text-2xl font-semibold">Create a post</h1>
+        <h1 className="text-2xl font-semibold">Update Post</h1>
         <form
           action=""
           onSubmit={handleSubmit}
@@ -117,22 +144,23 @@ export default function CreatePost() {
             type="text"
             placeholder="Title"
             className="rounded"
+            value={formData.title}
             onChange={(e) =>
               setFormData({ ...formData, title: e.target.value })
             }
-            required
           />
           <Select
             id="category"
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }
+            value={formData.category}
           >
-            <option value="uncategorized">Select a Category</option>
-            <option value="technology">Technology</option>
-            <option value="business">Business</option>
-            <option value="travel">Travel</option>
-            <option value="other">Other</option>
+            <option value="-">Select a Category</option>
+            <option value="Technology">Technology</option>
+            <option value="Business">Business</option>
+            <option value="Travel">Travel</option>
+            <option value="Other">Other</option>
           </Select>
 
           <div
@@ -174,14 +202,15 @@ export default function CreatePost() {
             onChange={(value) => {
               setFormData({ ...formData, content: value });
             }}
+            value={formData.content}
           />
 
           <Button type="submit" color="success">
-            Create Post
+            Update Post
           </Button>
-          {createError && (
+          {updateError && (
             <Alert className="mt-5" color="failure">
-              {createError}
+              {updateError}
             </Alert>
           )}
         </form>

@@ -7,7 +7,7 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from "../redux/user/userSlice";
+} from "../store/userSlice";
 import OAuth from "../components/OAuth";
 import LoginHeader from "../components/LoginHeader";
 

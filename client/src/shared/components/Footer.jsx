@@ -24,7 +24,7 @@ export default function FooterCom() {
         <div className="hidden sm:flex flex-col gap-y-3 flex-1">
           <Link
             to="/home"
-            className={`${
+            className={`w-24 ${
               theme === "light" ? "text-primary-color" : "text-soft-white"
             } whitespace-nowrap text-2xl sm:text-3xl font-airone`}
           >

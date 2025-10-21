@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleTheme } from "../redux/theme/themeSlice";
+import { toggleTheme } from "../../../shared/store/themeSlice";
 import { Button, Navbar } from "flowbite-react";
 import { PiMoon, PiSun } from "react-icons/pi";
 
