@@ -7,9 +7,9 @@ import {
   signInStart,
   signInSuccess,
   signInFailure,
-} from "../store/userSlice";
-import OAuth from "../components/OAuth";
-import LoginHeader from "../components/LoginHeader";
+} from "../../auth/store/userSlice";
+import OAuth from "../../auth/components/OAuth";
+import LoginHeader from "../../auth/components/LoginHeader";
 
 export default function SignIn() {
   const [formdata, setFormdata] = useState({});

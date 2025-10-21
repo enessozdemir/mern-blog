@@ -16,8 +16,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { PiMoon, PiNotePencilLight, PiSun } from "react-icons/pi";
 import { FiUser, FiLogOut } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleTheme } from "../store/themeSlice";
-import { signOutSuccess } from "../redux/user/userSlice";
+import { toggleTheme } from "../../shared/store/themeSlice";
+import { signOutSuccess } from "../../features/auth/store/userSlice";
 
 export default function Header() {
   const [showModal, setShowModal] = useState(false);

@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import Home from "./pages/Home";
-import Header from "./components/Header";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
-import FooterCom from "./components/Footer";
-import Dashboard from "./pages/Dashboard";
-import PrivateRoute from "./components/PrivateRoute";
-import CreatePost from "./pages/CreatePost";
-import UpdatePost from "./pages/UpdatePost";
-import PostPage from "./pages/PostPage";
-import ScrollToTop from "./components/ScrollToTop";
-import SearchPage from "./pages/SearchPage";
+import Home from "../src/features/posts/pages/Home";
+import Header from "../src/shared/components/Header";
+import SignIn from "./features/auth/pages/SignIn";
+import SignUp from "./features/auth/pages/SignUp";
+import FooterCom from "../src/shared/components/Footer";
+import Dashboard from "../src/features/dashboard/pages/Dashboard";
+import PrivateRoute from "../src/shared/components/PrivateRoute";
+import CreatePost from "../src/features/posts/pages/CreatePost";
+import UpdatePost from "../src/features/posts/pages/UpdatePost";
+import PostPage from "../src/features/posts/pages/PostPage";
+import ScrollToTop from "../src/shared/components/ScrollToTop";
+import SearchPage from "../src/features/search/pages/SearchPage";
 
 function App() {
   const location = useLocation();

@@ -19,7 +19,7 @@ import {
 // import { LuLayoutDashboard } from "react-icons/lu";
 import { useSelector, useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-import { signOutSuccess } from "../../redux/user/userSlice";
+import { signOutSuccess } from "../../auth/store/userSlice";
 import { MdOutlineManageAccounts } from "react-icons/md";
 
 export default function DashSidebar() {

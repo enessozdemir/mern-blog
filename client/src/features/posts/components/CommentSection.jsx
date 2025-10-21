@@ -10,7 +10,7 @@ import {
   ModalHeader,
   Textarea,
 } from "flowbite-react";
-import Comment from "./Comment";
+import Comment from "../../posts/components/Comment";
 import { useNavigate } from "react-router-dom";
 
 export default function CommentSection({ postId }) {
