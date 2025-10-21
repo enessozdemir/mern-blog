@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import OAuth from "../components/OAuth";
+import OAuth from "../../auth/components/LoginHeader";
 import { useSelector } from "react-redux";
-import LoginHeader from "../components/LoginHeader";
+import LoginHeader from "../../auth/components/LoginHeader";
 
 export default function SignUp() {
   const [formdata, setFormdata] = useState({});

@@ -10,7 +10,7 @@ import {
   TextInput,
 } from "flowbite-react";
 import { useState, useRef, useEffect } from "react";
-import { storage } from "../../firebase";
+import { storage } from "../../app/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
@@ -19,7 +19,7 @@ import {
   updateStart,
   updateSuccess,
   updateFailure,
-} from "../../redux/user/userSlice";
+} from "../../auth/store/userSlice";
 import { Link } from "react-router-dom";
 
 export default function DashProfile() {

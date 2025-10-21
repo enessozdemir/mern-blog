@@ -3,7 +3,7 @@
 import { Button, Select, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import PostCard from "../components/PostCard";
+import PostCard from "../../posts/components/PostCard";
 
 export default function SearchPage() {
   const [searchData, setSearchData] = useState({

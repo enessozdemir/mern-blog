@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
-import PostCard from "../components/PostCard";
+import PostCard from "../../posts/components/PostCard";
 
 export default function Home() {
   const [posts, setPosts] = useState([]);
