@@ -6,7 +6,6 @@ import {
   FooterTitle,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
-
 import {
   PiXLogo,
   PiLinkedinLogo,
@@ -14,10 +13,10 @@ import {
   PiInstagramLogo,
   PiDiscordLogo,
 } from "react-icons/pi";
-import { useSelector } from "react-redux";
+import { useTheme } from "../hooks/useTheme";
 
 export default function FooterCom() {
-  const { theme } = useSelector((state) => state.theme);
+  const { theme } = useTheme();
   return (
     <div className="p-7 sm:px-0">
       <div className="container mx-auto flex flex-col sm:flex-row">

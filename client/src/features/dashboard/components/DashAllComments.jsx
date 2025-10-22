@@ -10,122 +10,31 @@ import {
   TableRow,
   TableCell,
 } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { PiEqualsThin, PiXThin } from "react-icons/pi";
-import { useSelector } from "react-redux";
 import DashSidebar from "./DashSidebar";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useRef } from "react";
+import { useDashComments } from "../hooks/useDashComments";
 
 export default function DashAllComments() {
-  const { currentUser } = useSelector((state) => state.user);
-  const [comments, setComments] = useState([]);
-  const [showMore, setShowMore] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [dropdown, setDropdown] = useState(false);
-  const [commentIdToDelete, setCommentIdToDelete] = useState("");
   const location = useLocation();
-  const hasFetched = useRef(false);
+  const {
+    comments,
+    showMore,
+    showModal,
+    setShowModal,
+    dropdown,
+    setDropdown,
+    getAllComments,
+    handleShowMore,
+    handleDeleteComment,
+    handleDeleteClick,
+  } = useDashComments();
 
   useEffect(() => {
-    const getAllComments = async () => {
-      try {
-        const response = await fetch("/api/comment/all-comments?sort=desc");
-        if (response.ok) {
-          const commentData = await response.json();
-          const uniquePostIds = [
-            ...new Set(commentData.comments.map((comment) => comment.postId)),
-          ];
-
-          const postResponses = await Promise.all(
-            uniquePostIds.map((id) => fetch(`/api/post/${id}`))
-          );
-
-          const posts = await Promise.all(
-            postResponses.map((response) =>
-              response.ok ? response.json() : null
-            )
-          );
-
-          const postsById = posts.reduce((acc, post) => {
-            if (post) acc[post._id] = post;
-            return acc;
-          }, {});
-
-          const uniqueUserIds = [
-            ...new Set(commentData.comments.map((comment) => comment.userId)),
-          ];
-
-          const userResponses = await Promise.all(
-            uniqueUserIds.map((id) => fetch(`/api/user/${id}`))
-          );
-
-          const users = await Promise.all(
-            userResponses.map((response) =>
-              response.ok ? response.json() : null
-            )
-          );
-
-          const usersById = users.reduce((acc, user) => {
-            if (user) acc[user._id] = user;
-            return acc;
-          }, {});
-
-          setComments(
-            commentData.comments.map((comment) => ({
-              ...comment,
-              author: usersById[comment.userId],
-              post: postsById[comment.postId],
-            }))
-          );
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    if (!hasFetched.current) {
-      getAllComments();
-      hasFetched.current = true;
-    }
-  }, [currentUser._id]);
-
-  const handleShowMore = async () => {
-    const startIndex = comments.length;
-    try {
-      const res = await fetch(`/api/comment/comments?startIndex=${startIndex}`);
-      const data = await res.json();
-      if (res.ok) {
-        setComments((prev) => [...prev, ...data.comments]);
-        if (data.comments.length < 9) {
-          setShowMore(false);
-        }
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleDeleteComment = async () => {
-    setShowModal(false);
-    try {
-      const res = await fetch(
-        `/api/comment/delete-comment/${commentIdToDelete}`,
-        {
-          method: "DELETE",
-        }
-      );
-      if (res.ok) {
-        setComments((prev) =>
-          prev.filter((comment) => comment._id !== commentIdToDelete)
-        );
-        setShowModal(false);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+    getAllComments();
+  }, []);
 
   return (
     <div>
@@ -236,10 +145,7 @@ export default function DashAllComments() {
                     </TableCell>
                     <TableCell>
                       <span
-                        onClick={() => {
-                          setShowModal(true);
-                          setCommentIdToDelete(comment._id);
-                        }}
+                        onClick={() => handleDeleteClick(comment._id)}
                         className="font-medium text-red-500 hover:underline cursor-pointer"
                       >
                         Delete

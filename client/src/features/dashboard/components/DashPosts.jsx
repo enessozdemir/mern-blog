@@ -1,8 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
 import { PiEqualsThin, PiXThin } from "react-icons/pi";
 import DashSidebar from "./DashSidebar";
-import { useSelector } from "react-redux";
 import {
   Button,
   Modal,
@@ -16,51 +13,18 @@ import {
   TableRow,
 } from "flowbite-react";
 import { Link } from "react-router-dom";
+import { useDashPosts } from "../hooks/useDashPosts";
 
 export default function DashPosts() {
-  const [posts, setPosts] = useState([]);
-  const [dropdown, setDropdown] = useState(false);
-  const { currentUser } = useSelector((state) => state.user);
-  const [showModal, setShowModal] = useState(false);
-  const [postId, setPostId] = useState("");
-
-  const handlePosts = async () => {
-    try {
-      const response = await fetch(
-        `/api/post/posts/?userId=${currentUser._id}`
-      );
-      const data = await response.json();
-      if (response.ok) {
-        setPosts(data.posts);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleDeletePost = async () => {
-    setShowModal(false);
-    try {
-      const response = await fetch(
-        `/api/post/delete/${postId}/${currentUser._id}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await response.json();
-      if (!response.ok) {
-        console.log(data.message);
-      } else {
-        setPosts((prev) => prev.filter((post) => post._id !== postId));
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    handlePosts();
-  }, [currentUser._id]);
+  const {
+    posts,
+    dropdown,
+    setDropdown,
+    showModal,
+    setShowModal,
+    handleDeletePost,
+    handleDeleteClick,
+  } = useDashPosts();
 
   return (
     <div>
@@ -138,10 +102,7 @@ export default function DashPosts() {
                     <TableCell>
                       <span
                         className="font-medium text-red-500 hover:underline cursor-pointer"
-                        onClick={() => {
-                          setPostId(post._id);
-                          setShowModal(true);
-                        }}
+                        onClick={() => handleDeleteClick(post._id)}
                       >
                         Delete
                       </span>

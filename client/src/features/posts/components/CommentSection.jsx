@@ -1,7 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react/prop-types */
-import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -10,110 +6,25 @@ import {
   ModalHeader,
   Textarea,
 } from "flowbite-react";
-import Comment from "../../posts/components/Comment";
-import { useNavigate } from "react-router-dom";
+import Comment from "./Comment";
+import { useComments } from "../hooks/useComments";
 
 export default function CommentSection({ postId }) {
-  const [comment, setComment] = useState("");
-  const [comments, setComments] = useState([]);
-  const [commentError, setCommentError] = useState(null);
-  const { currentUser } = useSelector((state) => state.user);
-  const [isOpen, setIsOpen] = useState(true);
-  const [showModal, setShowModal] = useState(false);
-  const [commentToDelete, setCommentToDelete] = useState(null);
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (comment.length > 280) {
-      return;
-    }
-
-    try {
-      const response = await fetch("/api/comment/create-comment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: comment,
-          postId: postId,
-          userId: currentUser._id,
-        }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setComment("");
-        setCommentError(null);
-        setComments([data.data, ...comments]);
-      }
-    } catch (error) {
-      setCommentError(error.message);
-      console.log(error);
-    }
-  };
-
-  const handleFetchComments = async () => {
-    try {
-      const response = await fetch(`/api/comment/comments/${postId}`);
-      const data = await response.json();
-      if (response.ok) {
-        setComments(data.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    handleFetchComments();
-  }, [postId]);
-
-  const handleLikeComment = async (commentId) => {
-    try {
-      if (!currentUser) {
-        navigate("/sign-in");
-        return;
-      }
-      const res = await fetch(`/api/comment/like-comment/${commentId}`, {
-        method: "PUT",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setComments(
-          comments.map((comment) =>
-            comment._id === commentId
-              ? {
-                  ...comment,
-                  likes: data.likes,
-                  numberOfLikes: data.likes.length,
-                }
-              : comment
-          )
-        );
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleDeleteComment = async (commentId) => {
-    setShowModal(false);
-    try {
-      if (!currentUser) {
-        navigate("/sign-in");
-        return;
-      }
-      const response = await fetch(`/api/comment/delete-comment/${commentId}`, {
-        method: "DELETE",
-      });
-      if (response.ok) {
-        setComments(comments.filter((comment) => comment._id !== commentId));
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  const {
+    comment,
+    setComment,
+    comments,
+    commentError,
+    isOpen,
+    setIsOpen,
+    showModal,
+    setShowModal,
+    currentUser,
+    handleSubmit,
+    handleLikeComment,
+    handleDeleteComment,
+    handleDeleteClick,
+  } = useComments(postId);
 
   return (
     <div>
@@ -202,10 +113,7 @@ export default function CommentSection({ postId }) {
               key={comment._id}
               comment={comment}
               onLike={handleLikeComment}
-              onDelete={(commentId) => {
-                setShowModal(true);
-                setCommentToDelete(commentId);
-              }}
+              onDelete={handleDeleteClick}
             />
           ))}
         </>
@@ -234,7 +142,7 @@ export default function CommentSection({ postId }) {
               Cancel
             </Button>
             <Button
-              onClick={() => handleDeleteComment(commentToDelete)}
+              onClick={() => handleDeleteComment()}
               color="failure"
               className="font-extralight"
               size="sm"

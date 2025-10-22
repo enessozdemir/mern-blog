@@ -1,21 +1,13 @@
-/* eslint-disable react/prop-types */
 import { FiCamera } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { usePostCard } from "../hooks/usePostCard";
 
 export default function PostCard({ post }) {
-  const navigate = useNavigate();
-
-  const getPreviewContent = (content) => {
-    const plainText = content.replace(/<[^>]*>/g, "");
-    return plainText.length > 150
-      ? plainText.substring(0, 150) + "..."
-      : plainText;
-  };
+  const { getPreviewContent, handlePostClick } = usePostCard();
   return (
     <div
       className="mt-0 cursor-pointer hover:scale-[98%] transition-all duration-300"
-      onClick={() => navigate(`/post/${post.slug}`)}
+      onClick={() => handlePostClick(post.slug)}
     >
       <div className="h-[520px] rounded-tl-3xl rounded-tr-3xl overflow-hidden border dark:border-gray-600 mt-10">
         <div className="cursor-pointer">

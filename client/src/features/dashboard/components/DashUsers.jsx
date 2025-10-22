@@ -1,8 +1,5 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from "react";
 import { PiEqualsThin, PiXThin } from "react-icons/pi";
 import DashSidebar from "./DashSidebar";
-import { useSelector } from "react-redux";
 import {
   Button,
   Modal,
@@ -16,71 +13,20 @@ import {
   TableRow,
 } from "flowbite-react";
 import { FiCheck, FiX } from "react-icons/fi";
+import { useDashUsers } from "../hooks/useDashUsers";
 
 export default function DashUsers() {
-  const [users, setUsers] = useState([]);
-  const [showMore, setShowMore] = useState(true);
-  const [dropdown, setDropdown] = useState(false);
-  const { currentUser } = useSelector((state) => state.user);
-  const [showModal, setShowModal] = useState(false);
-  const [userId, setUserId] = useState("");
-
-  const handleUsers = async () => {
-    try {
-      const response = await fetch("/api/user/users/");
-      const data = await response.json();
-      if (response.ok) {
-        setUsers(data.users);
-        if (data.users.length < 9) {
-          setShowMore(false);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleShowMore = async () => {
-    try {
-      const response = await fetch(
-        `/api/user/users/?userId?startIndex=${users.length}`
-      );
-      const data = await response.json();
-      if (response.ok) {
-        setUsers([...users, ...data.users]);
-        if (data.users.length < 9) {
-          setShowMore(false);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleDeleteUser = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch(`/api/user/delete/${userId}`, {
-        method: "DELETE",
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        console.log(data.message);
-      } else {
-        setUsers((prev) => prev.filter((user) => user._id !== userId));
-        setShowModal(false);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  useEffect(() => {
-    if (currentUser.isAdmin) {
-      handleUsers();
-    }
-  }, [currentUser._id]);
+  const {
+    users,
+    showMore,
+    dropdown,
+    setDropdown,
+    showModal,
+    setShowModal,
+    handleShowMore,
+    handleDeleteUser,
+    handleDeleteClick,
+  } = useDashUsers();
 
   return (
     <div>
@@ -113,7 +59,7 @@ export default function DashUsers() {
       </div>
 
       <div className="overflow-scroll px-5 sm:px-16 mb-10">
-        {currentUser.isAdmin && users.length > 0 ? (
+        {users.length > 0 ? (
           <>
             {/* web table */}
             <Table hoverable className="shadow-sm">
@@ -150,10 +96,7 @@ export default function DashUsers() {
                     <TableCell>
                       <span
                         className="font-medium text-red-500 hover:underline cursor-pointer"
-                        onClick={() => {
-                          setUserId(user._id);
-                          setShowModal(true);
-                        }}
+                        onClick={() => handleDeleteClick(user._id)}
                       >
                         Delete
                       </span>

@@ -10,91 +10,34 @@ import {
   TableRow,
   TableCell,
 } from "flowbite-react";
-import { useEffect, useState } from "react";
 import { PiEqualsThin, PiXThin } from "react-icons/pi";
-import { useSelector } from "react-redux";
 import DashSidebar from "./DashSidebar";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useDashComments } from "../hooks/useDashComments";
+import { useEffect } from "react";
 
 export default function DashMyComments() {
-  const { currentUser } = useSelector((state) => state.user);
-  const [comments, setComments] = useState([]);
-  const [showMore, setShowMore] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [dropdown, setDropdown] = useState(false);
-  const [commentIdToDelete, setCommentIdToDelete] = useState("");
   const location = useLocation();
+  const {
+    comments,
+    setComments,
+    showMore,
+    showModal,
+    setShowModal,
+    dropdown,
+    setDropdown,
+    getUserComments,
+    handleShowMore,
+    handleDeleteComment,
+    handleDeleteClick,
+  } = useDashComments();
 
+  // Load user comments on mount
   useEffect(() => {
     setComments([]);
-    const getUserComments = async () => {
-      try {
-        const response = await fetch(
-          `/api/comment/getCommentsByUser/${currentUser._id}?sort=desc`
-        );
-        if (response.ok) {
-          const commentData = await response.json();
-          const commentsWithPosts = await Promise.all(
-            commentData.comments.map(async (comment) => {
-              const postResponse = await fetch(
-                `/api/post/posts/?postId=${comment.postId}`
-              );
-              const postData = await postResponse.json();
-              return {
-                ...comment,
-                post: postResponse.ok ? postData : null,
-              };
-            })
-          );
-          setComments((prev) => [...prev, ...commentsWithPosts]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
     getUserComments();
-  }, [currentUser._id]);
-
-  const handleShowMore = async () => {
-    const startIndex = comments.length;
-    try {
-      const res = await fetch(`/api/comment/comments?startIndex=${startIndex}`);
-      const data = await res.json();
-      if (res.ok) {
-        setComments((prev) => [...prev, ...data.comments]);
-        if (data.comments.length < 9) {
-          setShowMore(false);
-        }
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
-
-  const handleDeleteComment = async () => {
-    setShowModal(false);
-    try {
-      const res = await fetch(
-        `/api/comment/delete-comment/${commentIdToDelete}`,
-        {
-          method: "DELETE",
-        }
-      );
-      const data = await res.json();
-      if (res.ok) {
-        setComments((prev) =>
-          prev.filter((comment) => comment._id !== commentIdToDelete)
-        );
-        setShowModal(false);
-      } else {
-        console.log(data.message);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  }, []);
 
   return (
     <div>
@@ -196,10 +139,7 @@ export default function DashMyComments() {
                     </TableCell>
                     <TableCell>
                       <span
-                        onClick={() => {
-                          setShowModal(true);
-                          setCommentIdToDelete(comment._id);
-                        }}
+                        onClick={() => handleDeleteClick(comment._id)}
                         className="font-medium text-red-500 hover:underline cursor-pointer"
                       >
                         Delete

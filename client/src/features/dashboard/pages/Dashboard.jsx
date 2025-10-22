@@ -1,24 +1,15 @@
-import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import DashSidebar from "../../dashboard/components/DashSidebar";
-import DashProfile from "../../dashboard/components//DashProfile";
-import DashPosts from "../../dashboard/components//DashPosts";
-import DashUsers from "../../dashboard/components//DashUsers";
-import DashComponent from "../../dashboard/components//DashComponent";
-import DashUserPostsComments from "../../dashboard/components//DashUserPostsComments";
-import DashMyComments from "../../dashboard/components//DashMyComments";
-import DashAllComments from "../../dashboard/components//DashAllComments";
+import DashSidebar from "../components/DashSidebar";
+import DashProfile from "../components/DashProfile";
+import DashPosts from "../components/DashPosts";
+import DashUsers from "../components/DashUsers";
+import DashComponent from "../components/DashComponent";
+import DashUserPostsComments from "../components/DashUserPostsComments";
+import DashMyComments from "../components/DashMyComments";
+import DashAllComments from "../components/DashAllComments";
+import { useDashboardTab } from "../hooks/useDashboardTab";
 
 export default function Dashboard() {
-  const location = useLocation();
-  const [tab, setTab] = useState("dash");
-  useEffect(() => {
-    const currentTab = new URLSearchParams(location.search);
-    const tabFromUrl = currentTab.get("tab");
-    if (tabFromUrl) {
-      setTab(tabFromUrl);
-    }
-  }, [location.search]);
+  const { tab } = useDashboardTab();
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row border-b border-lighter-icon-color border-opacity-10">
@@ -27,9 +18,7 @@ export default function Dashboard() {
         <DashSidebar />
       </div>
 
-      {location.pathname === "/dashboard" && tab === "dash" && (
-        <DashComponent />
-      )}
+      {tab === "dash" && <DashComponent />}
 
       {/* Profile */}
       {tab === "profile" && <DashProfile />}
