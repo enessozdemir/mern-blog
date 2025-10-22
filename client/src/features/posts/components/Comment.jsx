@@ -1,29 +1,11 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
 import moment from "moment";
 import { FiThumbsUp } from "react-icons/fi";
-import { useSelector } from "react-redux";
 import { PiDotsThreeOutlineFill } from "react-icons/pi";
 import { Dropdown, DropdownItem } from "flowbite-react";
+import { useComment } from "../hooks/useComment";
 
 export default function Comment({ comment, onLike, onDelete }) {
-  const [user, setUser] = useState({});
-  const { currentUser } = useSelector((state) => state.user);
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await fetch(`/api/user/${comment.userId}`);
-        const data = await response.json();
-        if (response.ok) {
-          setUser(data);
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-    getUser();
-  }, [comment]);
+  const { user, currentUser } = useComment(comment);
   return (
     <div className="flex p-3 border-b dark:border-gray-600 mt-10">
       <div className="flex shrink-0 mr-3">

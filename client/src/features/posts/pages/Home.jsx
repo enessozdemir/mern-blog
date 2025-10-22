@@ -1,63 +1,14 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useState, useEffect } from "react";
-import PostCard from "../../posts/components/PostCard";
+import PostCard from "../components/PostCard";
+import { usePosts } from "../hooks/usePosts";
 
 export default function Home() {
-  const [posts, setPosts] = useState([]);
   const [activeTab, setActiveTab] = useState("");
-
-  const getAuthor = async (userId) => {
-    try {
-      const response = await fetch(`/api/user/author/${userId}`);
-      if (!response.ok) {
-        console.log("Author not found");
-      }
-      return await response.json();
-    } catch (error) {
-      console.log(error.message);
-      return null;
-    }
-  };
-
-  const getPosts = async () => {
-    try {
-      const response = await fetch("/api/post/posts");
-      const data = await response.json();
-
-      if (response.ok) {
-        const postsWithAuthors = await Promise.all(
-          data.posts.map(async (post) => {
-            const author = await getAuthor(post.userId);
-            return { ...post, author };
-          })
-        );
-        setPosts(postsWithAuthors);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
-  };
+  const { posts, getPosts, getPostsByCategory } = usePosts();
 
   const handleGetPostsByCategory = async (category) => {
-    try {
-      const response = await fetch(
-        `/api/post/posts?${category === "" ? null : `category=${category}`}`
-      );
-      const data = await response.json();
-
-      if (response.ok) {
-        const postsWithAuthors = await Promise.all(
-          data.posts.map(async (post) => {
-            const author = await getAuthor(post.userId);
-            return { ...post, author };
-          })
-        );
-        setPosts(postsWithAuthors);
-        setActiveTab(category);
-      }
-    } catch (error) {
-      console.log(error.message);
-    }
+    await getPostsByCategory(category);
+    setActiveTab(category);
   };
 
   useEffect(() => {
