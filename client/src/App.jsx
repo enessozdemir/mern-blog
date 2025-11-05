@@ -3,6 +3,7 @@ import Home from "../src/features/posts/pages/Home";
 import Header from "../src/shared/components/Header";
 import SignIn from "./features/auth/pages/SignIn";
 import SignUp from "./features/auth/pages/SignUp";
+import ForgotPassword from './features/auth/pages/ForgotPassword';
 import FooterCom from "../src/shared/components/Footer";
 import Dashboard from "../src/features/dashboard/pages/Dashboard";
 import PrivateRoute from "../src/shared/components/PrivateRoute";
@@ -14,7 +15,7 @@ import SearchPage from "../src/features/search/pages/SearchPage";
 
 function App() {
   const location = useLocation();
-  const hideHeaderAndFooter = ["/sign-in", "/sign-up"].includes(
+  const hideHeaderAndFooter = ["/sign-in", "/sign-up", "/forgot-password"].includes(
     location.pathname
   );
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
+  <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/search" element={<SearchPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />

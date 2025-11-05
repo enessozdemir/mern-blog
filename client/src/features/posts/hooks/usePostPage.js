@@ -55,6 +55,7 @@ export const usePostPage = () => {
 
   const getRecentPosts = async () => {
     try {
+      // default: fetch recent posts when no specific post is available
       const response = await fetch("/api/post/posts?limit=4&startIndex=1");
       const data = await response.json();
       if (response.ok) {
@@ -75,9 +76,44 @@ export const usePostPage = () => {
     getPost();
   }, [postSlug]);
 
+  // When post is loaded, fetch related posts using category
   useEffect(() => {
-    getRecentPosts();
-  }, []);
+    if (!post) {
+      getRecentPosts();
+      return;
+    }
+
+    const getRelatedPosts = async () => {
+      try {
+        // Try to fetch posts by same category and then filter out current post
+        const category = post.category;
+        const response = await fetch(
+          `/api/post/posts?category=${encodeURIComponent(category)}&limit=6&startIndex=0`
+        );
+        const data = await response.json();
+        if (response.ok && data.posts) {
+          const filtered = data.posts
+            .filter((p) => p._id !== post._id)
+            .slice(0, 4);
+
+          const postsWithAuthors = await Promise.all(
+            filtered.map(async (p) => {
+              const author = await getAuthor(p.userId);
+              return { ...p, author };
+            })
+          );
+          setRecentPosts(postsWithAuthors);
+        } else {
+          // fallback to recent posts
+          getRecentPosts();
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    getRelatedPosts();
+  }, [post]);
 
   return {
     post,

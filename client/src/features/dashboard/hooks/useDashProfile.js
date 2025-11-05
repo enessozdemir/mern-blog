@@ -7,10 +7,14 @@ import {
   updateSuccess,
   updateFailure,
 } from "../../auth/store/userSlice";
+import { signOutSuccess } from "../../auth/store/userSlice";
+import { useNavigate } from 'react-router-dom';
+import { persistor } from '../../app/store';
 
 export const useDashProfile = () => {
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(null);
   const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
@@ -127,9 +131,18 @@ export const useDashProfile = () => {
         setDeleteUserError(data.message);
       } else {
         setDeleteUserSuccess(data.message);
+        // Clear persisted user state and navigate to home as logged-out
+        dispatch(signOutSuccess());
+        try {
+          // purge persisted store so user is fully logged out
+          await persistor.purge();
+        } catch (err) {
+          console.log('Error purging persisted store', err);
+        }
         setTimeout(() => {
-          window.location.href = "/";
-        }, 1500);
+          // use navigate for SPA transition
+          navigate('/');
+        }, 800);
       }
     } catch (error) {
       setDeleteUserError(error.message);

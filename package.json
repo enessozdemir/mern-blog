@@ -9,7 +9,11 @@
     "start": "npm run start:api && npm run start:client",
     "start:api": "node api/index.js", 
     "start:client": "cd client && npm run start",
-    "build": "npm install && npm install --prefix client && npm run build --prefix client"
+    "build": "npm install && npm install --prefix client && npm run build --prefix client",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:backend": "jest --runInBand",
+    "test:e2e": "cypress run"
   },
   "keywords": [],
   "author": "",

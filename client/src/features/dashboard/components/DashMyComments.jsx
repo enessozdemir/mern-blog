@@ -16,8 +16,11 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useDashComments } from "../hooks/useDashComments";
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 export default function DashMyComments() {
+  const { currentUser } = useSelector((state) => state.user);
+
   const location = useLocation();
   const {
     comments,
@@ -33,7 +36,6 @@ export default function DashMyComments() {
     handleDeleteClick,
   } = useDashComments();
 
-  // Load user comments on mount
   useEffect(() => {
     setComments([]);
     getUserComments();
